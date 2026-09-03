@@ -11,6 +11,23 @@ const process = [
   { no: '04', title: '育てていく。', text: '公開・納品がゴールではありません。反応を見ながら継続的な改善にも伴走します。' },
 ];
 
+const portfolio = [
+  {
+    type: 'ELECTRICAL COMPANY',
+    title: '光栄電設株式会社',
+    text: '採用と法人問い合わせの獲得を想定した、電気工事会社向けコーポレートサイト。事業内容・施工実績・会社案内まで設計したデモです。',
+    href: 'https://systemengi2001-afk.github.io/fieldworks-showcase/denki/',
+    accent: 'cyan',
+  },
+  {
+    type: 'HVAC COMPANY',
+    title: '蒼空テクノ株式会社',
+    text: '技術力と対応領域を伝える、空調設備会社向けコーポレートサイト。施工実績・採用・問い合わせ導線を含むデモです。',
+    href: 'https://systemengi2001-afk.github.io/fieldworks-showcase/air/',
+    accent: 'orange',
+  },
+];
+
 const faqs = [
   ['まだ要件が固まっていません。相談できますか？', 'もちろんです。「何を作ればよいか」から一緒に整理します。課題や実現したいことだけをお聞かせください。'],
   ['小規模な修正だけでも依頼できますか？', 'はい。既存サイトの部分修正、機能追加、原因調査など、小さなご相談にも柔軟に対応します。'],
@@ -23,7 +40,7 @@ export default function Home() {
     <main id="top">
       <nav className="nav shell">
         <a className="brand" href="#top" aria-label="MeRGe トップへ">MeRGe<span>.</span></a>
-        <div className="navLinks"><a href="#about">ABOUT</a><a href="#services">SERVICES</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a></div>
+        <div className="navLinks"><a href="#about">ABOUT</a><a href="#services">SERVICES</a><a href="#works">WORKS</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a></div>
         <a className="navCta" href="mailto:systemengi2001@gmail.com">無料相談 <span>↗</span></a>
       </nav>
 
@@ -56,18 +73,27 @@ export default function Home() {
         <div className="scopeCloud">{['新規サイト制作','サイトリニューアル','ランディングページ','予約システム','顧客管理ツール','業務の自動化','フォーム改善','スマホ対応','機能追加','表示速度改善','保守・運用','技術相談'].map((item,i)=><span className={`chip c${i%4}`} key={item}>{item}<b>+</b></span>)}</div>
       </section>
 
+      <section id="works" className="portfolio section">
+        <div className="shell">
+          <div className="sectionHead"><div><p className="sectionTag">SELECTED WORKS</p><span>03 — PORTFOLIO</span></div><h2>業界を理解し、<br /><em>伝わる形へ。</em></h2><p>企画・情報設計・デザイン・実装まで担当した制作例です。各サイトは別タブでご覧いただけます。</p></div>
+          <div className="workGrid">{portfolio.map((work, index) => <a className={`workCard ${work.accent}`} href={work.href} target="_blank" rel="noreferrer" key={work.title}><div className="workVisual"><span>0{index + 1}</span><b>{work.type}</b><i aria-hidden="true" /></div><div className="workCopy"><p>{work.type}</p><h3>{work.title}</h3><span>{work.text}</span><strong>サイトを見る <b>↗</b></strong></div></a>)}</div>
+          <p className="demoNote">※ ポートフォリオ内の会社名・住所・実績などは、制作例として作成した架空情報です。</p>
+        </div>
+      </section>
+
       <section id="process" className="process section">
-        <div className="shell"><div className="sectionHead"><div><p className="sectionTag">HOW WE WORK</p><span>03 — OUR PROCESS</span></div><h2>わかりやすく、<br /><em>同じ方向を向いて。</em></h2><p>専門用語に頼らず、途中経過をこまめに共有。初めてのご依頼でも不安なく進められます。</p></div>
+        <div className="shell"><div className="sectionHead"><div><p className="sectionTag">HOW WE WORK</p><span>04 — OUR PROCESS</span></div><h2>わかりやすく、<br /><em>同じ方向を向いて。</em></h2><p>専門用語に頼らず、途中経過をこまめに共有。初めてのご依頼でも不安なく進められます。</p></div>
         <div className="steps">{process.map((step)=><article key={step.no}><span>{step.no}</span><div className="stepDot"/><h3>{step.title}</h3><p>{step.text}</p></article>)}</div></div>
       </section>
 
       <section id="faq" className="faq shell section">
-        <div className="sideTitle"><p className="sectionTag">FAQ</p><span>04 — QUESTIONS</span></div>
+        <div className="sideTitle"><p className="sectionTag">FAQ</p><span>05 — QUESTIONS</span></div>
         <div><h2>依頼前の、<br /><em>よくある質問。</em></h2><div className="faqList">{faqs.map(([q,a],i)=><details key={q}><summary><span>{String(i+1).padStart(2,'0')}</span>{q}<b>＋</b></summary><p>{a}</p></details>)}</div></div>
       </section>
 
       <section id="contact" className="contact"><div className="contactGlow"/><div className="shell contactInner"><p className="eyebrow"><span /> LET&apos;S CREATE SOMETHING</p><h2>その「できたらいいな」を、<br /><em>聞かせてください。</em></h2><p className="contactLead">まとまっていなくても大丈夫です。課題やアイデアを伺い、最初の一歩を一緒に考えます。</p><a className="mail" href="mailto:systemengi2001@gmail.com"><span>メールで無料相談</span><b>systemengi2001@gmail.com</b><i>↗</i></a><small>通常、内容を確認後にメールでご返信します。</small></div></section>
-      <footer className="shell"><a className="brand" href="#top">MeRGe<span>.</span></a><p>Two freelance engineers.<br/>Designing and developing in Japan.</p><div><a href="#services">SERVICES</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a></div><small>© 2026 MeRGe</small></footer>
+      <footer className="shell"><a className="brand" href="#top">MeRGe<span>.</span></a><p>Two freelance engineers.<br/>Designing and developing in Japan.</p><div><a href="#services">SERVICES</a><a href="#works">WORKS</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a></div><small>© 2026 MeRGe</small></footer>
     </main>
   );
 }
+
