@@ -8,12 +8,40 @@ import styles from '../styles.module.css';
 type Props = { params: Promise<{ slug: string }> };
 const allArticles = [...articles, ...extraArticles];
 
+const conversionPaths: Record<string, string[]> = {
+  'systeme-io-review': ['systeme-io-pricing', 'systeme-io-free-plan', 'systeme-io-disadvantages'],
+  'systeme-io-pricing': ['systeme-io-free-plan', 'systeme-io-how-to-start', 'systeme-io-alternatives'],
+  'systeme-io-free-plan': ['systeme-io-how-to-start', 'systeme-io-disadvantages', 'systeme-io-vs-thinkific'],
+  'systeme-io-how-to-start': ['systeme-io-disadvantages', 'systeme-io-alternatives', 'online-course-platform-free'],
+  'systeme-io-disadvantages': ['systeme-io-alternatives', 'systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels'],
+  'systeme-io-vs-thinkific': ['systeme-io-alternatives', 'online-course-platform-free', 'systeme-io-review'],
+  'systeme-io-alternatives': ['systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels', 'systeme-io-vs-thinkific'],
+  'systeme-io-vs-kajabi': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
+  'systeme-io-vs-clickfunnels': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
+  'online-course-platform-free': ['systeme-io-free-plan', 'systeme-io-how-to-start', 'systeme-io-vs-thinkific'],
+};
+
 export function generateStaticParams() {
   return allArticles.map(({ slug }) => ({ slug }));
 }
 
 function getArticle(slug: string) {
   return allArticles.find((article) => article.slug === slug);
+}
+
+function getRelated(slug: string) {
+  const orderedSlugs = conversionPaths[slug];
+  if (orderedSlugs) {
+    return orderedSlugs
+      .map((relatedSlug) => getArticle(relatedSlug))
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  }
+
+  return allArticles
+    .filter((item) => item.slug !== slug)
+    .sort((a, b) => Number(!a.affiliatePending) - Number(!b.affiliatePending))
+    .reverse()
+    .slice(0, 3);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -40,7 +68,8 @@ export default async function AffiliateArticlePage({ params }: Props) {
   const article = getArticle(slug);
   if (!article) notFound();
 
-  const related = allArticles.filter((item) => item.slug !== article.slug).slice(0, 3);
+  const related = getRelated(article.slug);
+  const nextArticle = related[0];
   const linkRel = article.affiliatePending ? 'noopener noreferrer' : 'nofollow sponsored noopener noreferrer';
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -72,7 +101,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
           <div className={styles.decisionBox}>
             <span>QUICK DECISION</span>
             <strong>先に結論だけ知りたい人へ</strong>
-            <p>この記事は、機能を全部覚えるためではなく「自分に合うか」を判断するためのものです。合いそうなら公式サイトで実際の画面・料金を確認し、合わなければ関連記事から別候補へ進んでください。</p>
+            <p>この記事は、機能を全部覚えるためではなく「自分に合うか」を判断するためのものです。合いそうなら公式サイトで実際の画面・料金を確認し、合わなければ比較記事から別候補へ進んでください。</p>
             <a className={styles.ctaInline} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta} ↗</a>
             {!article.affiliatePending && <small>※ このリンクはアフィリエイトリンクです。</small>}
           </div>
@@ -84,11 +113,24 @@ export default async function AffiliateArticlePage({ params }: Props) {
             </section>
           ))}
 
+          {nextArticle && (
+            <aside className={styles.nextGuide} aria-label="次に確認する記事">
+              <span>YOUR NEXT DECISION</span>
+              <p>ここまで読んだ人が、次に確認するならこの1本です。</p>
+              <Link href={`/affiliate/${nextArticle.slug}/`}>
+                <small>{nextArticle.service} / {nextArticle.intent}</small>
+                <strong>{nextArticle.title}</strong>
+                <b>次の判断材料を見る →</b>
+              </Link>
+            </aside>
+          )}
+
           <div className={styles.finalCta}>
             <span>NEXT STEP</span>
             <h2>読むだけで終わらせず、合うかを実物で確認する。</h2>
             <p>料金・仕様・使い勝手は変わることがあります。最終判断は公式サイトの最新情報と、実際の操作感で決めるのが安全です。</p>
             <a className={styles.cta} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta}</a>
+            {!article.affiliatePending && <small className={styles.ctaNote}>※ このリンクはアフィリエイトリンクです。</small>}
           </div>
 
           {article.affiliatePending && (
@@ -97,7 +139,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
           <p className={styles.disclosure}>広告・アフィリエイトについて：当サイトは一部リンクから成果報酬を受け取る場合があります。料金・仕様・提供条件は変更される可能性があるため、契約前に必ず公式サイトで最新情報をご確認ください。</p>
 
           <aside className={styles.related} aria-label="関連記事">
-            <div className={styles.relatedHead}><span>RELATED</span><h2>次に読む記事</h2></div>
+            <div className={styles.relatedHead}><span>RELATED</span><h2>比較を続ける</h2></div>
             <div className={styles.relatedList}>
               {related.map((item, index) => (
                 <Link href={`/affiliate/${item.slug}/`} key={item.slug}>
