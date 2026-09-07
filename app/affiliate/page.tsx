@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { articles, SITE } from '../../lib/affiliateData';
 import { extraArticles } from '../../lib/affiliateExtraData';
+import { highValueArticles } from '../../lib/affiliateHighValueData';
 import styles from './styles.module.css';
 
-const allArticles = [...articles, ...extraArticles];
+const allArticles = [...articles, ...extraArticles, ...highValueArticles];
 
 const monetizationOrder = [
   'systeme-io-review',
@@ -17,9 +18,13 @@ const monetizationOrder = [
   'systeme-io-vs-clickfunnels',
   'online-course-platform-free',
   'systeme-io-how-to-start',
-  'marketing-tools-for-small-business',
+  'thinkific-pricing',
+  'thinkific-vs-systeme-io-for-course-creators',
   'thinkific-review',
+  'kinsta-pricing-for-wordpress',
+  'kinsta-for-web-agencies',
   'kinsta-review',
+  'marketing-tools-for-small-business',
 ];
 
 const rankedArticles = monetizationOrder
