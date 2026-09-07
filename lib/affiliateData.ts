@@ -18,6 +18,8 @@ export const SITE = {
   baseUrl: 'https://systemengi2001-afk.github.io/merge-engineers/affiliate',
 };
 
+const SYSTEME_IO_AFFILIATE_URL = 'https://systeme.io/jp?sa=sa0280926250afeb54ccbe34abfc78fa154603223e';
+
 export const articles: AffiliateArticle[] = [
   {
     slug: 'systeme-io-review',
@@ -26,8 +28,8 @@ export const articles: AffiliateArticle[] = [
     service: 'systeme.io',
     intent: '購入直前',
     updated: '2026-09-07',
-    affiliateUrl: 'https://systeme.io/',
-    affiliatePending: true,
+    affiliateUrl: SYSTEME_IO_AFFILIATE_URL,
+    affiliatePending: false,
     intro: 'LP、メール配信、オンライン講座、販売導線をできるだけ一つにまとめたい人向けのオールインワン型マーケティングツールです。',
     sections: [
       { heading: 'systeme.ioが向いている人', body: ['複数のSaaSを契約せず、まず無料で販売導線を試したい人に向いています。特に副業、コンテンツ販売、個人サービスとの相性が良いです。'] },
@@ -35,7 +37,7 @@ export const articles: AffiliateArticle[] = [
       { heading: '注意点', body: ['海外サービスのため、日本国内向けサービスと比べるとUIやサポート面で慣れが必要な場合があります。料金・プラン内容は契約前に必ず公式ページで最新条件を確認してください。'] },
       { heading: '結論', body: ['まず小さく販売導線を作りたいなら有力候補です。無料で触って、自分の販売フローに合うかを確認してから有料化するのが安全です。'] },
     ],
-    cta: 'systeme.ioを公式サイトで確認する',
+    cta: 'systeme.ioを無料で確認する',
   },
   {
     slug: 'thinkific-review',
@@ -80,8 +82,8 @@ export const articles: AffiliateArticle[] = [
     service: '複数',
     intent: '比較',
     updated: '2026-09-07',
-    affiliateUrl: 'https://systeme.io/',
-    affiliatePending: true,
+    affiliateUrl: SYSTEME_IO_AFFILIATE_URL,
+    affiliatePending: false,
     intro: '自動化は「全部をAIに任せる」より、集客・教育・販売・運用のボトルネックを一つずつSaaSで減らす方が失敗しにくいです。',
     sections: [
       { heading: '販売導線を一つにまとめたい：systeme.io', body: ['LP、メール、講座、ファネルをまとめたい人向け。最初の固定費を抑えやすいのが魅力です。'] },
