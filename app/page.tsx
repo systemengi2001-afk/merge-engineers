@@ -80,7 +80,7 @@ export default function Home() {
       </section>
 
       <section id="contact" className="contact"><div className="contactGlow"/><div className="shell contactInner"><p className="eyebrow"><span /> LET&apos;S CREATE SOMETHING</p><h2>その「できたらいいな」を、<br /><em>聞かせてください。</em></h2><p className="contactLead">まとまっていなくても大丈夫です。課題やアイデアを伺い、最初の一歩を一緒に考えます。</p><a className="mail" href="mailto:systemengi2001@gmail.com"><span>メールで無料相談</span><b>systemengi2001@gmail.com</b><i>↗</i></a><small>通常、内容を確認後にメールでご返信します。</small></div></section>
-      <footer className="shell"><a className="brand" href="#top">MeRGe<span>.</span></a><p>Two freelance engineers.<br/>Designing and developing in Japan.</p><div><a href="#services">SERVICES</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a></div><small>© 2026 MeRGe</small></footer>
+      <footer className="shell"><a className="brand" href="#top">MeRGe<span>.</span></a><p>Two freelance engineers.<br/>Designing and developing in Japan.</p><div><a href="#services">SERVICES</a><a href="#process">PROCESS</a><a href="#faq">FAQ</a><a href={`${assetPath}/affiliate/`}>AI TOOL SELECT</a></div><small>© 2026 MeRGe</small></footer>
     </main>
   );
 }
