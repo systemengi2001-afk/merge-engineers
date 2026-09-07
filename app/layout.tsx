@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
   title: 'MeRGe | ふたりのフリーランスエンジニア',
   description: 'Web制作からシステム開発まで。二人のフリーランスエンジニアが、あなたの要望を動くカタチにします。',
+  verification: {
+    google: 'c2oRKzBaZH_rR59yinrDaBdQkyiW7RdB-dm5mKydi_E',
+  },
   openGraph: {
     title: 'MeRGe | 想いを、動くカタチに。',
     description: '二人のフリーランスエンジニアが、Web制作からシステム開発まで柔軟に対応します。',
@@ -21,4 +24,3 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="ja"><body>{children}</body></html>;
 }
-
