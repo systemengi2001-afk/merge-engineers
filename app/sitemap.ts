@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { articles, SITE } from '../lib/affiliateData';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
