@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { articles, SITE } from '../../../lib/affiliateData';
 import { extraArticles } from '../../../lib/affiliateExtraData';
+import { highValueArticles } from '../../../lib/affiliateHighValueData';
 import styles from '../styles.module.css';
 
 type Props = { params: Promise<{ slug: string }> };
-const allArticles = [...articles, ...extraArticles];
+const allArticles = [...articles, ...extraArticles, ...highValueArticles];
 
 const conversionPaths: Record<string, string[]> = {
   'systeme-io-review': ['systeme-io-pricing', 'systeme-io-free-plan', 'systeme-io-disadvantages'],
@@ -14,11 +15,17 @@ const conversionPaths: Record<string, string[]> = {
   'systeme-io-free-plan': ['systeme-io-how-to-start', 'systeme-io-disadvantages', 'systeme-io-vs-thinkific'],
   'systeme-io-how-to-start': ['systeme-io-disadvantages', 'systeme-io-alternatives', 'online-course-platform-free'],
   'systeme-io-disadvantages': ['systeme-io-alternatives', 'systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels'],
-  'systeme-io-vs-thinkific': ['systeme-io-alternatives', 'online-course-platform-free', 'systeme-io-review'],
+  'systeme-io-vs-thinkific': ['thinkific-pricing', 'systeme-io-alternatives', 'online-course-platform-free'],
   'systeme-io-alternatives': ['systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels', 'systeme-io-vs-thinkific'],
   'systeme-io-vs-kajabi': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
   'systeme-io-vs-clickfunnels': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
-  'online-course-platform-free': ['systeme-io-free-plan', 'systeme-io-how-to-start', 'systeme-io-vs-thinkific'],
+  'online-course-platform-free': ['systeme-io-free-plan', 'thinkific-pricing', 'systeme-io-vs-thinkific'],
+  'thinkific-review': ['thinkific-pricing', 'thinkific-vs-systeme-io-for-course-creators', 'systeme-io-vs-thinkific'],
+  'thinkific-pricing': ['thinkific-vs-systeme-io-for-course-creators', 'systeme-io-vs-thinkific', 'online-course-platform-free'],
+  'thinkific-vs-systeme-io-for-course-creators': ['thinkific-pricing', 'systeme-io-pricing', 'online-course-platform-free'],
+  'kinsta-review': ['kinsta-pricing-for-wordpress', 'kinsta-for-web-agencies', 'marketing-tools-for-small-business'],
+  'kinsta-pricing-for-wordpress': ['kinsta-for-web-agencies', 'kinsta-review', 'marketing-tools-for-small-business'],
+  'kinsta-for-web-agencies': ['kinsta-pricing-for-wordpress', 'kinsta-review', 'marketing-tools-for-small-business'],
 };
 
 export function generateStaticParams() {
