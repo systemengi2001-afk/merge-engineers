@@ -94,7 +94,10 @@ export default function AffiliateHome() {
         <div className={styles.notice}>
           当サイトにはアフィリエイトリンクを含む記事があります。報酬の有無にかかわらず、向いていないケースや注意点も記載します。料金・仕様は契約前に公式サイトで最新情報をご確認ください。
         </div>
-        <footer className={styles.footer}>© 2026 {SITE.name}</footer>
+        <footer className={styles.footer}>
+          <div><Link href="/affiliate/about/">運営方針</Link> / <Link href="/affiliate/policy/">広告・編集ポリシー</Link></div>
+          <div>© 2026 {SITE.name}</div>
+        </footer>
       </div>
     </main>
   );
