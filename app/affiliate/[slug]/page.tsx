@@ -35,6 +35,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
   if (!article) notFound();
 
   const related = articles.filter((item) => item.slug !== article.slug).slice(0, 3);
+  const linkRel = article.affiliatePending ? 'noopener noreferrer' : 'nofollow sponsored noopener noreferrer';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -62,6 +63,14 @@ export default async function AffiliateArticlePage({ params }: Props) {
           <div className={styles.updated}>最終更新: {article.updated}</div>
           <p className={styles.lead}>{article.intro}</p>
 
+          <div className={styles.decisionBox}>
+            <span>QUICK DECISION</span>
+            <strong>先に結論だけ知りたい人へ</strong>
+            <p>この記事は、機能を全部覚えるためではなく「自分に合うか」を判断するためのものです。合いそうなら公式サイトで実際の画面・料金を確認し、合わなければ関連記事から別候補へ進んでください。</p>
+            <a className={styles.ctaInline} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta} ↗</a>
+            {!article.affiliatePending && <small>※ このリンクはアフィリエイトリンクです。</small>}
+          </div>
+
           {article.sections.map((section) => (
             <section key={section.heading}>
               <h2>{section.heading}</h2>
@@ -69,9 +78,13 @@ export default async function AffiliateArticlePage({ params }: Props) {
             </section>
           ))}
 
-          <a className={styles.cta} href={article.affiliateUrl} target="_blank" rel="nofollow sponsored noopener noreferrer">
-            {article.cta}
-          </a>
+          <div className={styles.finalCta}>
+            <span>NEXT STEP</span>
+            <h2>読むだけで終わらせず、合うかを実物で確認する。</h2>
+            <p>料金・仕様・使い勝手は変わることがあります。最終判断は公式サイトの最新情報と、実際の操作感で決めるのが安全です。</p>
+            <a className={styles.cta} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta}</a>
+          </div>
+
           {article.affiliatePending && (
             <p className={styles.disclosure}>現在は公式サイトへの通常リンクです。提携承認後は、アフィリエイトリンクであることを明示したうえで差し替えます。</p>
           )}
