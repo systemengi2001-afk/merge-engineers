@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { articles, SITE } from '../lib/affiliateData';
 import { extraArticles } from '../lib/affiliateExtraData';
+import { highValueArticles } from '../lib/affiliateHighValueData';
 
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const allArticles = [...articles, ...extraArticles];
+  const allArticles = [...articles, ...extraArticles, ...highValueArticles];
   return [
     {
       url: 'https://systemengi2001-afk.github.io/merge-engineers/',
