@@ -1,13 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { articles, getArticle, SITE } from '../../../lib/affiliateData';
+import { articles, SITE } from '../../../lib/affiliateData';
+import { extraArticles } from '../../../lib/affiliateExtraData';
 import styles from '../styles.module.css';
 
 type Props = { params: Promise<{ slug: string }> };
+const allArticles = [...articles, ...extraArticles];
 
 export function generateStaticParams() {
-  return articles.map(({ slug }) => ({ slug }));
+  return allArticles.map(({ slug }) => ({ slug }));
+}
+
+function getArticle(slug: string) {
+  return allArticles.find((article) => article.slug === slug);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -34,7 +40,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
   const article = getArticle(slug);
   if (!article) notFound();
 
-  const related = articles.filter((item) => item.slug !== article.slug).slice(0, 3);
+  const related = allArticles.filter((item) => item.slug !== article.slug).slice(0, 3);
   const linkRel = article.affiliatePending ? 'noopener noreferrer' : 'nofollow sponsored noopener noreferrer';
   const jsonLd = {
     '@context': 'https://schema.org',
