@@ -16,13 +16,15 @@ export const metadata: Metadata = {
 };
 
 export default function AffiliateHome() {
+  const featured = articles.find((article) => article.slug === 'systeme-io-review');
+
   return (
     <main className={styles.page}>
       <div className={styles.shell}>
         <section className={styles.hero}>
           <div className={styles.eyebrow}>AI / SaaS / Automation</div>
-          <h1>仕事を減らし、売上につながるツールを選ぶ。</h1>
-          <p>{SITE.description}。料金の安さだけではなく、導入で減らせる作業時間と販売導線まで見て比較します。</p>
+          <h1>迷う時間を減らして、使える道具だけ選ぶ。</h1>
+          <p>副業・Web制作・小規模事業で、本当に導入候補になるAI・SaaSを比較します。機能一覧ではなく「誰に向くか」「何が減るか」「結局どれを選ぶか」まで短く判断できるように整理します。</p>
           <div className={styles.comparison}>
             <div className={styles.mini}><strong>販売導線</strong><span>LP・メール・ファネル</span></div>
             <div className={styles.mini}><strong>講座販売</strong><span>LMS・会員コンテンツ</span></div>
@@ -30,6 +32,25 @@ export default function AffiliateHome() {
           </div>
         </section>
 
+        {featured && (
+          <section className={styles.featured} aria-label="最優先のおすすめ">
+            <div className={styles.featuredLabel}>EDITOR&apos;S PICK / まず見るならこれ</div>
+            <div className={styles.featuredGrid}>
+              <div>
+                <p className={styles.featuredKicker}>販売導線を1つにまとめたい人向け</p>
+                <h2>LP、メール、講座、販売導線。<br />バラバラに契約する前に。</h2>
+                <p>systeme.ioは、複数ツールをまたぐ手間を減らしたい個人事業主・副業ユーザーの有力候補です。まず無料で触って、必要な機能だけで足りるか確認できます。</p>
+              </div>
+              <div className={styles.featuredAction}>
+                <Link href="/affiliate/systeme-io-review/">3分で向き・不向きを確認する →</Link>
+                <a href={featured.affiliateUrl} target="_blank" rel="nofollow sponsored noopener noreferrer">systeme.ioを無料で試す ↗</a>
+                <small>※ 下のボタンはアフィリエイトリンクです。</small>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <div className={styles.sectionTitle}><span>GUIDES</span><h2>目的から選ぶ</h2></div>
         <section className={styles.grid} aria-label="おすすめ記事">
           {articles.map((article) => (
             <Link key={article.slug} className={styles.card} href={`/affiliate/${article.slug}/`}>
@@ -39,13 +60,13 @@ export default function AffiliateHome() {
               </div>
               <h2>{article.title}</h2>
               <p>{article.description}</p>
-              <div className={styles.link}>記事を読む →</div>
+              <div className={styles.link}>判断材料を見る →</div>
             </Link>
           ))}
         </section>
 
         <div className={styles.notice}>
-          当サイトにはアフィリエイトリンクを含む記事があります。掲載順位は報酬額だけで決めず、用途・機能・導入負担を基準に整理します。
+          当サイトにはアフィリエイトリンクを含む記事があります。報酬の有無にかかわらず、向いていないケースや注意点も記載します。料金・仕様は契約前に公式サイトで最新情報をご確認ください。
         </div>
         <footer className={styles.footer}>© 2026 {SITE.name}</footer>
       </div>
