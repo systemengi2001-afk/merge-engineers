@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { articles, SITE } from '../../lib/affiliateData';
+import { extraArticles } from '../../lib/affiliateExtraData';
 import styles from './styles.module.css';
+
+const allArticles = [...articles, ...extraArticles];
 
 export const metadata: Metadata = {
   title: `AI・SaaS比較 | ${SITE.name}`,
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default function AffiliateHome() {
-  const featured = articles.find((article) => article.slug === 'systeme-io-review');
+  const featured = allArticles.find((article) => article.slug === 'systeme-io-review');
 
   return (
     <main className={styles.page}>
@@ -52,7 +55,7 @@ export default function AffiliateHome() {
 
         <div className={styles.sectionTitle}><span>GUIDES</span><h2>目的から選ぶ</h2></div>
         <section className={styles.grid} aria-label="おすすめ記事">
-          {articles.map((article) => (
+          {allArticles.map((article) => (
             <Link key={article.slug} className={styles.card} href={`/affiliate/${article.slug}/`}>
               <div className={styles.meta}>
                 <span className={styles.pill}>{article.service}</span>
