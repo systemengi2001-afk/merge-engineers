@@ -6,6 +6,29 @@ import styles from './styles.module.css';
 
 const allArticles = [...articles, ...extraArticles];
 
+const monetizationOrder = [
+  'systeme-io-review',
+  'systeme-io-pricing',
+  'systeme-io-free-plan',
+  'systeme-io-disadvantages',
+  'systeme-io-vs-thinkific',
+  'systeme-io-alternatives',
+  'systeme-io-vs-kajabi',
+  'systeme-io-vs-clickfunnels',
+  'online-course-platform-free',
+  'systeme-io-how-to-start',
+  'marketing-tools-for-small-business',
+  'thinkific-review',
+  'kinsta-review',
+];
+
+const rankedArticles = monetizationOrder
+  .map((slug) => allArticles.find((article) => article.slug === slug))
+  .filter((article): article is (typeof allArticles)[number] => Boolean(article));
+
+const unrankedArticles = allArticles.filter((article) => !monetizationOrder.includes(article.slug));
+const displayArticles = [...rankedArticles, ...unrankedArticles];
+
 export const metadata: Metadata = {
   title: `AI・SaaS比較 | ${SITE.name}`,
   description: SITE.description,
@@ -53,9 +76,9 @@ export default function AffiliateHome() {
           </section>
         )}
 
-        <div className={styles.sectionTitle}><span>GUIDES</span><h2>目的から選ぶ</h2></div>
+        <div className={styles.sectionTitle}><span>GUIDES</span><h2>成約に近い順に読む</h2></div>
         <section className={styles.grid} aria-label="おすすめ記事">
-          {allArticles.map((article) => (
+          {displayArticles.map((article) => (
             <Link key={article.slug} className={styles.card} href={`/affiliate/${article.slug}/`}>
               <div className={styles.meta}>
                 <span className={styles.pill}>{article.service}</span>
