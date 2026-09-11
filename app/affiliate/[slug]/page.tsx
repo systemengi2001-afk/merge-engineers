@@ -10,19 +10,20 @@ type Props = { params: Promise<{ slug: string }> };
 const allArticles = [...articles, ...extraArticles, ...highValueArticles];
 
 const conversionPaths: Record<string, string[]> = {
-  'systeme-io-review': ['systeme-io-pricing', 'systeme-io-free-plan', 'systeme-io-disadvantages'],
-  'systeme-io-pricing': ['systeme-io-free-plan', 'systeme-io-how-to-start', 'systeme-io-alternatives'],
-  'systeme-io-free-plan': ['systeme-io-how-to-start', 'systeme-io-disadvantages', 'systeme-io-vs-thinkific'],
-  'systeme-io-how-to-start': ['systeme-io-disadvantages', 'systeme-io-alternatives', 'online-course-platform-free'],
+  'systeme-io-review': ['systeme-io-pricing', 'systeme-io-annual-plan', 'systeme-io-free-plan'],
+  'systeme-io-pricing': ['systeme-io-annual-plan', 'systeme-io-free-plan', 'systeme-io-how-to-start'],
+  'systeme-io-annual-plan': ['systeme-io-pricing', 'systeme-io-review', 'systeme-io-how-to-start'],
+  'systeme-io-free-plan': ['systeme-io-how-to-start', 'systeme-io-pricing', 'systeme-io-disadvantages'],
+  'systeme-io-how-to-start': ['systeme-io-pricing', 'systeme-io-disadvantages', 'systeme-io-alternatives'],
   'systeme-io-disadvantages': ['systeme-io-alternatives', 'systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels'],
-  'systeme-io-vs-thinkific': ['thinkific-pricing', 'systeme-io-alternatives', 'online-course-platform-free'],
+  'systeme-io-vs-thinkific': ['systeme-io-pricing', 'thinkific-pricing', 'systeme-io-alternatives'],
   'systeme-io-alternatives': ['systeme-io-vs-kajabi', 'systeme-io-vs-clickfunnels', 'systeme-io-vs-thinkific'],
   'systeme-io-vs-kajabi': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
   'systeme-io-vs-clickfunnels': ['systeme-io-pricing', 'systeme-io-alternatives', 'systeme-io-review'],
   'online-course-platform-free': ['systeme-io-free-plan', 'thinkific-pricing', 'systeme-io-vs-thinkific'],
   'thinkific-review': ['thinkific-pricing', 'thinkific-vs-systeme-io-for-course-creators', 'systeme-io-vs-thinkific'],
   'thinkific-pricing': ['thinkific-vs-systeme-io-for-course-creators', 'systeme-io-vs-thinkific', 'online-course-platform-free'],
-  'thinkific-vs-systeme-io-for-course-creators': ['thinkific-pricing', 'systeme-io-pricing', 'online-course-platform-free'],
+  'thinkific-vs-systeme-io-for-course-creators': ['systeme-io-pricing', 'thinkific-pricing', 'online-course-platform-free'],
   'kinsta-review': ['kinsta-pricing-for-wordpress', 'kinsta-for-web-agencies', 'marketing-tools-for-small-business'],
   'kinsta-pricing-for-wordpress': ['kinsta-for-web-agencies', 'kinsta-review', 'marketing-tools-for-small-business'],
   'kinsta-for-web-agencies': ['kinsta-pricing-for-wordpress', 'kinsta-review', 'marketing-tools-for-small-business'],
@@ -109,7 +110,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
             <span>QUICK DECISION</span>
             <strong>先に結論だけ知りたい人へ</strong>
             <p>この記事は、機能を全部覚えるためではなく「自分に合うか」を判断するためのものです。合いそうなら公式サイトで実際の画面・料金を確認し、合わなければ比較記事から別候補へ進んでください。</p>
-            <a className={styles.ctaInline} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta} ↗</a>
+            <a className={styles.ctaInline} href={article.affiliateUrl} target="_blank" rel={linkRel} data-affiliate-cta="quick" data-service={article.service} data-article={article.slug}>{article.cta} ↗</a>
             {!article.affiliatePending && <small>※ このリンクはアフィリエイトリンクです。</small>}
           </div>
 
@@ -136,7 +137,7 @@ export default async function AffiliateArticlePage({ params }: Props) {
             <span>NEXT STEP</span>
             <h2>読むだけで終わらせず、合うかを実物で確認する。</h2>
             <p>料金・仕様・使い勝手は変わることがあります。最終判断は公式サイトの最新情報と、実際の操作感で決めるのが安全です。</p>
-            <a className={styles.cta} href={article.affiliateUrl} target="_blank" rel={linkRel}>{article.cta}</a>
+            <a className={styles.cta} href={article.affiliateUrl} target="_blank" rel={linkRel} data-affiliate-cta="final" data-service={article.service} data-article={article.slug}>{article.cta}</a>
             {!article.affiliatePending && <small className={styles.ctaNote}>※ このリンクはアフィリエイトリンクです。</small>}
           </div>
 
@@ -160,6 +161,26 @@ export default async function AffiliateArticlePage({ params }: Props) {
           </aside>
 
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+          <script dangerouslySetInnerHTML={{ __html: `
+            document.addEventListener('click', function (event) {
+              var target = event.target instanceof Element ? event.target.closest('[data-affiliate-cta]') : null;
+              if (!target) return;
+              var payload = {
+                event: 'affiliate_cta_click',
+                service: target.getAttribute('data-service') || '',
+                article: target.getAttribute('data-article') || '',
+                placement: target.getAttribute('data-affiliate-cta') || ''
+              };
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push(payload);
+              try {
+                var key = 'affiliate_cta_clicks';
+                var clicks = JSON.parse(localStorage.getItem(key) || '[]');
+                clicks.push(Object.assign({ ts: new Date().toISOString() }, payload));
+                localStorage.setItem(key, JSON.stringify(clicks.slice(-200)));
+              } catch (e) {}
+            });
+          ` }} />
         </article>
       </div>
     </main>
