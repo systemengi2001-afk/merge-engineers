@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './mobile-fixes.css';
+import './works.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
