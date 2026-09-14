@@ -31,51 +31,31 @@ const details = [
 
 export default function Interactions() {
   useEffect(() => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const reveals = Array.from(document.querySelectorAll<HTMLElement>(
-      '.sectionHead, .workCard, .serviceList article, .aboutBody > *, .teamGrid article, .processPhoto, .steps article, .faq details, .contactInner > *'
-    ));
-
-    reveals.forEach((el, index) => {
-      el.classList.add('revealItem');
-      el.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
-    });
-
-    if (reduceMotion) {
-      reveals.forEach((el) => el.classList.add('isVisible'));
-    } else {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).classList.add('isVisible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.13, rootMargin: '0px 0px -7% 0px' });
-      reveals.forEach((el) => observer.observe(el));
-    }
-
     const cards = Array.from(document.querySelectorAll<HTMLElement>('.workCard'));
+    const cleanups: Array<() => void> = [];
+
     cards.forEach((card, index) => {
       card.setAttribute('role', 'button');
       card.setAttribute('tabindex', '0');
       card.setAttribute('aria-label', `${details[index]?.title ?? 'Sample Work'} の詳細を見る`);
+
       const open = () => window.dispatchEvent(new CustomEvent('open-work-modal', { detail: index }));
+      const keydown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      };
+
       card.addEventListener('click', open);
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      card.addEventListener('keydown', keydown);
+      cleanups.push(() => {
+        card.removeEventListener('click', open);
+        card.removeEventListener('keydown', keydown);
       });
     });
 
-    const onScroll = () => {
-      if (reduceMotion) return;
-      const y = window.scrollY;
-      document.documentElement.style.setProperty('--scroll-y', `${y}px`);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => cleanups.forEach((fn) => fn());
   }, []);
 
   useEffect(() => {
@@ -84,8 +64,7 @@ export default function Interactions() {
       const data = details[index];
       if (!data) return;
 
-      const previous = document.querySelector('.workModal');
-      previous?.remove();
+      document.querySelector('.workModal')?.remove();
 
       const modal = document.createElement('div');
       modal.className = 'workModal';
@@ -103,6 +82,7 @@ export default function Interactions() {
           <div class="workModalNote"><b>SAMPLE / CONCEPT WORK</b><p>${data.note}</p></div>
           <a href="#contact" class="workModalCta">このような制作を相談する <span>→</span></a>
         </section>`;
+
       document.body.appendChild(modal);
       requestAnimationFrame(() => modal.classList.add('isOpen'));
       document.body.classList.add('modalOpen');
@@ -112,11 +92,18 @@ export default function Interactions() {
         document.body.classList.remove('modalOpen');
         window.setTimeout(() => modal.remove(), 260);
       };
+
       modal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
       modal.querySelector('.workModalCta')?.addEventListener('click', close);
-      const keyClose = (e: KeyboardEvent) => { if (e.key === 'Escape') { close(); window.removeEventListener('keydown', keyClose); } };
+      const keyClose = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          close();
+          window.removeEventListener('keydown', keyClose);
+        }
+      };
       window.addEventListener('keydown', keyClose);
     };
+
     window.addEventListener('open-work-modal', handler);
     return () => window.removeEventListener('open-work-modal', handler);
   }, []);
