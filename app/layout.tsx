@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+import MotionController from './animations';
 import './globals.css';
 import './mobile-fixes.css';
 import './works.css';
+import './animations.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
@@ -24,5 +26,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ja"><body>{children}</body></html>;
+  return <html lang="ja"><body><MotionController />{children}</body></html>;
 }
