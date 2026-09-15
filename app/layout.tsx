@@ -6,6 +6,8 @@ import './mobile-fixes.css';
 import './works.css';
 import './animations.css';
 import './interactions.css';
+import './services-static.css';
+import './illustration-override.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
