@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-app=FastAPI(title="JONG AI Public",version="4.5-public")
+app=FastAPI(title="JONG AI Public",version="4.6-public")
 
 SANMA=set([0,8,*range(9,34)])
 RULES={
@@ -35,6 +35,20 @@ def fmt(i):
     if i<18:return f"{i-8}p"
     if i<27:return f"{i-17}s"
     return f"{i-26}z"
+
+def single_index(token):
+    c=parse(token)
+    if sum(c)!=1: raise ValueError("ドラ表示牌は1牌ずつ入力してください")
+    return next(i for i,x in enumerate(c) if x)
+
+def dora_from_indicator(ind, allowed):
+    if ind==0 and 1 not in allowed: return 8
+    if ind==8 and 1 not in allowed: return 0
+    if ind<27:
+        base=(ind//9)*9; rank=ind%9
+        return base+((rank+1)%9)
+    if 27<=ind<=30: return 27+((ind-27+1)%4)
+    return 31+((ind-31+1)%3)
 
 @lru_cache(None)
 def std_dfs(state,idx=0,m=0,t=0,p=0):
@@ -83,7 +97,49 @@ def ukeire(c13,visible,allowed):
         if ns<base: out.append((i,4-visible[i],ns))
     return base,out
 
-def analyze(hand,ruleset,draws,visible_tokens,dora,nuki):
+def base_points_from_han(han, dealer=False):
+    if han>=13: pts=32000
+    elif han>=11: pts=24000
+    elif han>=8: pts=16000
+    elif han>=6: pts=12000
+    elif han>=5: pts=8000
+    elif han==4: pts=7700
+    elif han==3: pts=5200
+    elif han==2: pts=2600
+    else: pts=1300
+    return int(round(pts*1.5/100)*100) if dealer else pts
+
+def structural_yaku_han(counts, ruleset):
+    han=1
+    reasons=["立直想定 1翻"]
+    terminals_honors={0,8,9,17,18,26,*range(27,34)}
+    if all(counts[i]==0 for i in terminals_honors):
+        if ruleset!="osaka_sanma_v1":
+            han+=1; reasons.append("断么九形 1翻")
+    for i,name in ((31,"白"),(32,"發"),(33,"中")):
+        if counts[i]>=3:
+            han+=1; reasons.append(f"{name}刻子 1翻")
+    suits_present=[any(counts[i] for i in range(b,b+9)) for b in (0,9,18)]
+    honor_present=any(counts[i] for i in range(27,34))
+    suit_count=sum(suits_present)
+    if suit_count==1:
+        if honor_present:
+            han+=3; reasons.append("混一色形 3翻")
+        else:
+            han+=6; reasons.append("清一色形 6翻")
+    return han,reasons
+
+def estimated_hand_value(counts, dora_targets, nuki, red, ruleset, dealer=False):
+    dora_count=sum(counts[i] for i in dora_targets)
+    yaku_han,reasons=structural_yaku_han(counts,ruleset)
+    total_han=yaku_han+dora_count+nuki+red
+    if dora_count: reasons.append(f"ドラ {dora_count}翻")
+    if red: reasons.append(f"赤ドラ {red}翻")
+    if nuki: reasons.append(f"抜き北 {nuki}翻")
+    pts=base_points_from_han(total_han,dealer=dealer)
+    return pts,total_han,dora_count,reasons
+
+def analyze(hand,ruleset,draws,visible_tokens,dora,nuki,red_dora_count,dealer):
     c=parse(hand)
     if sum(c)!=14: raise ValueError("公開版は14枚の手牌を入力してください")
     if ruleset not in RULES: raise ValueError("不明なルール")
@@ -98,9 +154,9 @@ def analyze(hand,ruleset,draws,visible_tokens,dora,nuki):
             if visible[i]>4: raise ValueError("可視牌が4枚を超えています")
     visible[30]+=nuki
     if visible[30]>4: raise ValueError("北が4枚を超えています")
+    dora_targets=[dora_from_indicator(single_index(tok),allowed) for tok in dora]
     live=sum(4-visible[i] for i in allowed)
-    rows=[]
-    seen=set()
+    rows=[]; seen=set()
     for d in range(34):
         if c[d]==0 or d in seen: continue
         seen.add(d); h=c.copy();h[d]-=1
@@ -109,15 +165,19 @@ def analyze(hand,ruleset,draws,visible_tokens,dora,nuki):
         p1=0 if live<=0 else min(1,ut/live)
         ten=1-(1-p1)**max(1,draws)
         win=max(0.0,min(1.0,ten*(0.42 if s<=0 else 0.18/(s+1))))
-        avg=5200*(2**min(nuki,2))
+        avg,han,dora_count,reasons=estimated_hand_value(h,dora_targets,nuki,red_dora_count,ruleset,dealer=dealer)
         ev=win*avg
         rows.append({"discard":fmt(d),"shanten":s,"ukeire_total":ut,
                      "ukeire":[{"tile":fmt(i),"remaining":r,"next_shanten":ns} for i,r,ns in u],
                      "tenpai_probability":ten,"win_probability":win,
-                     "expected_points":round(ev,1),"average_win_points":avg})
+                     "expected_points":round(ev,1),"average_win_points":avg,
+                     "estimated_han":han,"dora_count":dora_count,
+                     "red_dora_count":red_dora_count,"nuki_dora_count":nuki,
+                     "score_reasons":reasons})
     rows.sort(key=lambda x:(-x["expected_points"],x["shanten"],-x["ukeire_total"],x["discard"]))
     return {"best_by_ev":rows[0]["discard"] if rows else None,"candidates":rows,
-            "ruleset":{"id":ruleset,"players":players},"notice":"JONG AI public beta: 高速近似EV"}
+            "dora_tiles":[fmt(i) for i in dora_targets],"ruleset":{"id":ruleset,"players":players},
+            "notice":"JONG AI public beta v4.6: EV = 推定和了率 × 候補別推定打点。ドラ・赤ドラ・抜き北・一部役形を反映。"}
 
 class Req(BaseModel):
     hand:str
@@ -127,13 +187,15 @@ class Req(BaseModel):
     visible_tiles:list[str]=[]
     dora_indicators:list[str]=[]
     nuki_count:int=Field(default=0,ge=0,le=4)
+    red_dora_count:int=Field(default=0,ge=0,le=4)
+    dealer:bool=False
 
 @app.get("/healthz")
 def healthz(): return {"ok":True,"version":app.version}
 
 @app.post("/v1/analyze")
 def api_analyze(r:Req):
-    try:return analyze(r.hand,r.ruleset,r.draws,r.visible_tiles,r.dora_indicators,r.nuki_count)
+    try:return analyze(r.hand,r.ruleset,r.draws,r.visible_tiles,r.dora_indicators,r.nuki_count,r.red_dora_count,r.dealer)
     except ValueError as e: raise HTTPException(400,str(e))
 
 front=Path(__file__).resolve().parents[1]/"frontend"
