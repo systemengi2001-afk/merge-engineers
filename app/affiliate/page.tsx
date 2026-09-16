@@ -8,9 +8,9 @@ import styles from './styles.module.css';
 const allArticles = [...articles, ...extraArticles, ...highValueArticles];
 
 const monetizationOrder = [
-  'systeme-io-review',
-  'systeme-io-pricing',
   'systeme-io-annual-plan',
+  'systeme-io-pricing',
+  'systeme-io-review',
   'systeme-io-free-plan',
   'systeme-io-disadvantages',
   'systeme-io-vs-thinkific',
@@ -39,7 +39,7 @@ export default function AffiliateHome() {
   return (
     <main className={styles.page}><div className={styles.shell}>
       <section className={styles.hero}><div className={styles.eyebrow}>AI / SaaS / Automation</div><h1>迷う時間を減らして、使える道具だけ選ぶ。</h1><p>副業・Web制作・小規模事業で、本当に導入候補になるAI・SaaSを比較します。機能一覧ではなく「誰に向くか」「何が減るか」「結局どれを選ぶか」まで短く判断できるように整理します。</p><div className={styles.comparison}><div className={styles.mini}><strong>販売導線</strong><span>LP・メール・ファネル</span></div><div className={styles.mini}><strong>講座販売</strong><span>LMS・会員コンテンツ</span></div><div className={styles.mini}><strong>Web運用</strong><span>WordPress・自動化</span></div></div></section>
-      {featured && <section className={styles.featured} aria-label="最優先のおすすめ"><div className={styles.featuredLabel}>EDITOR&apos;S PICK / まず見るならこれ</div><div className={styles.featuredGrid}><div><p className={styles.featuredKicker}>販売導線を1つにまとめたい人向け</p><h2>LP、メール、講座、販売導線。<br />バラバラに契約する前に。</h2><p>systeme.ioは、複数ツールをまたぐ手間を減らしたい個人事業主・副業ユーザーの有力候補です。公式の無料プランはカード不要で、2,000コンタクト・3セールスファネル・1コースまで試せます。まず販売導線を1本作り、必要になった時だけ有料化できます。</p><p><strong>有料化するなら年払いも比較対象です。</strong> 公式の日本向け年間プランはStartup 年24,800円、Webinar 年60,000円、Unlimited 年125,000円。各年払いは月払い12か月分より2か月分安く、公式では年払い契約者向けの無料移行サービスも案内されています。まず無料で相性を確認し、継続利用を決めた段階で年払いを検討するのが無駄を抑えやすい選び方です。</p></div><div className={styles.featuredAction}><a href={featured.affiliateUrl} target="_blank" rel="nofollow sponsored noopener noreferrer">無料で販売導線を1本作ってみる ↗</a><Link href="/affiliate/systeme-io-annual-plan/">年払いなら2か月分お得｜3プラン比較 →</Link><Link href="/affiliate/systeme-io-pricing/">無料・月払い・年払いの選び方 →</Link><small>※ 最初のボタンは承認済みアフィリエイトリンクです。無料プランはカード不要。料金・仕様は契約前に公式画面をご確認ください。</small></div></div></section>}
+      {featured && <section className={styles.featured} aria-label="最優先のおすすめ"><div className={styles.featuredLabel}>EDITOR&apos;S PICK / まず見るならこれ</div><div className={styles.featuredGrid}><div><p className={styles.featuredKicker}>販売導線を1つにまとめたい人向け</p><h2>LP、メール、講座、販売導線。<br />バラバラに契約する前に。</h2><p>systeme.ioは、複数ツールをまたぐ手間を減らしたい個人事業主・副業ユーザーの有力候補です。公式の無料プランはカード不要で、2,000コンタクト・3セールスファネル・1コースまで試せます。まず販売導線を1本作り、必要になった時だけ有料化できます。</p><p><strong>すでに継続利用を決めているなら、年払いを先に比較してください。</strong> 日本向け公式ではStartup 年24,800円で紹介報酬14,880円。年払いは2か月分安くなります。まだ用途が固まっていない人は無料プランから、1年以上使う判断ができている人は年払い比較へ進むと、契約判断を短くできます。</p></div><div className={styles.featuredAction}><Link href="/affiliate/systeme-io-annual-plan/">1年以上使うなら年払い3プランを比較 →</Link><a href={featured.affiliateUrl} target="_blank" rel="nofollow sponsored noopener noreferrer">まだ迷うなら無料で販売導線を1本作る ↗</a><Link href="/affiliate/systeme-io-pricing/">無料・月払い・年払いの選び方 →</Link><small>※ アフィリエイトリンクは承認済みsysteme.ioリンクのみ使用しています。無料プランはカード不要。料金・仕様は契約前に公式画面をご確認ください。</small></div></div></section>}
       <div className={styles.sectionTitle}><span>GUIDES</span><h2>成約に近い順に読む</h2></div><section className={styles.grid} aria-label="おすすめ記事">{displayArticles.map((article) => <Link key={article.slug} className={styles.card} href={`/affiliate/${article.slug}/`}><div className={styles.meta}><span className={styles.pill}>{article.service}</span><span className={styles.pill}>{article.intent}</span></div><h2>{article.title}</h2><p>{article.description}</p><div className={styles.link}>判断材料を見る →</div></Link>)}</section>
       <div className={styles.notice}>当サイトにはアフィリエイトリンクを含む記事があります。報酬の有無にかかわらず、向いていないケースや注意点も記載します。料金・仕様は契約前に公式サイトで最新情報をご確認ください。</div><footer className={styles.footer}><div><Link href="/affiliate/about/">運営方針</Link> / <Link href="/affiliate/methodology/">比較方法</Link> / <Link href="/affiliate/policy/">広告・編集ポリシー</Link> / <Link href="/affiliate/privacy/">プライバシー</Link></div><div>© 2026 {SITE.name}</div></footer>
     </div></main>
