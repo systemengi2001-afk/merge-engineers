@@ -1,1 +1,264 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0d10"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JONG AI"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon.svg"><title>JONG AI</title><style>*{box-sizing:border-box}body{margin:0;background:#0b0d10;color:#f7f8fa;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.s{max-width:720px;margin:auto;padding:26px 16px 70px}.brand{font-weight:900;letter-spacing:.18em}.ver{font-size:11px;color:#71808e;margin-top:5px}.hero{font-size:34px;line-height:1.15;margin:28px 0 8px}.sub{color:#9da7b2;line-height:1.6}.card{background:#13171c;border:1px solid #252d36;border-radius:22px;padding:17px;margin:14px 0}label{display:block;font-size:12px;color:#9da7b2;margin:10px 0 6px}input,select{width:100%;font-size:16px;padding:13px;border-radius:12px;border:1px solid #252d36;background:#191f26;color:#fff}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}button,.camera{width:100%;padding:15px;border:0;border-radius:14px;font-size:16px;font-weight:800;margin-top:14px;text-align:center;display:block}.camera{background:#f7f8fa;color:#0b0d10}.camera input{display:none}#preview{width:100%;max-height:320px;object-fit:contain;border-radius:14px;margin-top:12px;background:#090b0d}.best{font-size:50px;font-weight:900}.m{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metric{background:#191f26;border-radius:14px;padding:12px}.metric b{display:block;font-size:20px;margin-top:4px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 4px;border-bottom:1px solid #252d36;text-align:right}th:first-child,td:first-child{text-align:left}.hidden{display:none}.status,.note{color:#9da7b2;font-size:13px;margin-top:9px;line-height:1.5}.warn{color:#ffcf70;font-size:13px;line-height:1.55;margin-top:10px}.scoreline{margin-top:10px;font-size:14px;color:#d8dee6}@media(min-width:580px){.m{grid-template-columns:repeat(5,1fr)}}</style></head><body><main class="s"><div class="brand">JONG AI</div><div class="ver">APP v0.3 · ENGINE v6.10 BASE</div><h1 class="hero">撮って、確認して、<br>最善の一打へ。</h1><p class="sub">iPhone実機テスト版。写真を撮影して同じ画面で手牌を確認し、JONG AIのEV解析を試せます。</p><div class="card"><b>① 実戦写真</b><label class="camera">カメラで撮影 / 写真を選択<input id="photo" type="file" accept="image/*" capture="environment"></label><img id="preview" class="hidden" alt="撮影した麻雀写真"><div id="vision" class="warn">画像認識モデルは商用リリース基準未達のため、自動確定を停止しています。現在の独立検証は56牌中17牌正解（30.36%）。写真を見ながら下の手牌を確認・修正してください。</div></div><div class="card"><b>② 手牌を確認して解析</b><label>手牌（MPSZ）</label><input id="hand" value="11m2356789p23778s"><div class="row"><div><label>ルール</label><select id="rules"><option value="sanma_standard">三麻 標準</option><option value="osaka_sanma_v1">大阪三麻</option><option value="yonma_standard">四麻 標準</option></select></div><div><label>残り自摸</label><input id="draws" type="number" min="1" max="6" value="3"></div></div><div class="row"><div><label>抜き北</label><input id="nuki" type="number" min="0" max="4" value="0"></div><div><label>ドラ表示牌</label><input id="dora" placeholder="4p,9s"></div></div><div class="row"><div><label>赤ドラ枚数</label><input id="red" type="number" min="0" max="4" value="0"></div><div><label>親</label><select id="dealer"><option value="0">子</option><option value="1">親</option></select></div></div><button id="go">JONG AIで解析する</button><div id="status" class="status"></div></div><section id="result" class="hidden"><div class="card"><div id="best" class="best">—</div><div class="m"><div class="metric">EV<b id="ev">—</b></div><div class="metric">推定打点<b id="score">—</b></div><div class="metric">和了率<b id="win">—</b></div><div class="metric">聴牌率<b id="ten">—</b></div><div class="metric">受け入れ<b id="uke">—</b></div></div><div id="scoreline" class="scoreline"></div><div id="note" class="note"></div></div><div class="card"><b>全候補</b><div style="overflow:auto"><table><thead><tr><th>打牌</th><th>EV</th><th>打点</th><th>ドラ</th><th>和了</th><th>受入</th></tr></thead><tbody id="rows"></tbody></table></div></div></section></main><script>const $=id=>document.getElementById(id),pct=v=>(v*100).toFixed(1)+"%";$("photo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;$("preview").src=URL.createObjectURL(f);$("preview").classList.remove("hidden");$("vision").textContent="写真を読み込みました。v0.3では誤認識による誤解析を防ぐため自動牌確定を停止中です。写真と手牌欄を照合してから解析してください。"});$("go").addEventListener("click",async()=>{try{$("status").textContent="解析中…";const ruleset=$("rules").value;const dora=$("dora").value.split(",").map(x=>x.trim()).filter(Boolean);const body={hand:$("hand").value.trim(),draws:+$("draws").value,ruleset,game_mode:ruleset==="yonma_standard"?"yonma":"sanma",nuki_count:+$("nuki").value,red_dora_count:+$("red").value,dealer:$("dealer").value==="1",dora_indicators:dora,visible_tiles:[]};const r=await fetch("/v1/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw Error(j.detail||"解析エラー");const c=j.candidates,b=c[0];$("best").textContent=b.discard+" 切り";$("ev").textContent=Math.round(b.expected_points)+"pt";$("score").textContent=Math.round(b.average_win_points)+"pt";$("win").textContent=pct(b.win_probability);$("ten").textContent=pct(b.tenpai_probability);$("uke").textContent=b.ukeire_total+"枚";$("scoreline").textContent=`推定 ${b.estimated_han}翻 / ドラ${b.dora_count}・赤${b.red_dora_count}・抜き北${b.nuki_dora_count}`;$("note").textContent=(b.score_reasons||[]).join(" / ")+"。打点は現時点の形からの近似です。";$("rows").innerHTML=c.map(x=>`<tr><td>${x.discard}</td><td>${Math.round(x.expected_points)}</td><td>${Math.round(x.average_win_points)}</td><td>${x.dora_count+x.red_dora_count+x.nuki_dora_count}</td><td>${pct(x.win_probability)}</td><td>${x.ukeire_total}</td></tr>`).join("");$("result").classList.remove("hidden");$("status").textContent="解析完了";}catch(e){$("status").textContent=e.message}});if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));</script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0d10" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="JONG AI" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="apple-touch-icon" href="/icons/icon-192.png" />
+<title>JONG AI</title>
+<style>
+:root{
+  --bg:#0b0d10; --panel:#13171c; --panel2:#191f26; --text:#f7f8fa;
+  --muted:#9da7b2; --line:#252d36; --accent:#f1f3f5; --good:#c9ffd8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.shell{max-width:760px;margin:auto;padding:28px 18px 80px}
+.brand{font-weight:800;letter-spacing:.18em;font-size:18px;margin-bottom:30px}
+.hero{font-size:34px;line-height:1.18;font-weight:750;letter-spacing:-.03em;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 28px;line-height:1.6}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+.upload{border:1px dashed #3b4652;border-radius:18px;min-height:160px;display:grid;place-items:center;text-align:center;cursor:pointer;overflow:hidden}
+.upload img{width:100%;display:block}
+input[type=file]{display:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:12px;color:var(--muted);display:block;margin:6px 0}
+input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:13px;font-size:16px}
+.hand{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
+button{width:100%;border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:750;cursor:pointer}
+.primary{background:#f4f6f8;color:#101215}
+.secondary{background:#20262d;color:#fff;margin-top:8px}
+.status{font-size:13px;color:var(--muted);margin-top:10px}
+.best{font-size:52px;font-weight:850;letter-spacing:-.04em;margin:2px 0 0}
+.best small{font-size:16px;color:var(--muted);font-weight:500}
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+.metric{background:var(--panel2);border-radius:14px;padding:12px}
+.metric b{font-size:21px;display:block;margin-top:4px}
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table td,.table th{border-bottom:1px solid var(--line);padding:11px 5px;text-align:right}
+.table td:first-child,.table th:first-child{text-align:left}
+.coach{line-height:1.72;color:#e8edf2}
+.hidden{display:none!important}
+.tile-editor{display:flex;gap:5px;overflow-x:auto;padding:10px 2px 8px;min-height:72px;scrollbar-width:none}
+.tile{flex:0 0 42px;height:58px;border-radius:7px;background:#f5f1e7;color:#151515;border:1px solid #c9c3b6;display:grid;place-items:center;font-weight:800;font-size:19px;box-shadow:0 2px 5px #0005;position:relative}
+.tile.red{color:#d33434}.tile small{position:absolute;bottom:3px;right:4px;font-size:9px;color:#777}.tile.selected{outline:3px solid #78a9ff;transform:translateY(-3px)}
+.edit-actions{display:flex;align-items:center;gap:10px}.mini{width:auto;padding:9px 12px;font-size:13px;background:#20262d;color:#fff}
+.palette{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:10px 0;padding:10px;background:#0e1115;border-radius:14px}.palette button{padding:8px 2px;font-size:12px;background:#f5f1e7;color:#151515;border-radius:7px}.palette .honor{grid-column:auto}
+.step{display:flex;gap:8px;margin-bottom:18px}.step span{flex:1;height:4px;border-radius:99px;background:#252d36}.step span.on{background:#f4f6f8}
+.notice{font-size:12px;color:var(--muted);line-height:1.55;margin-top:10px}
+.badge{display:inline-block;border:1px solid #394550;border-radius:99px;padding:4px 8px;font-size:11px;color:var(--muted)}
+@media(min-width:620px){.metrics{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand">JONG AI <span class="badge">APP v0.2</span></div><div class="step"><span class="on"></span><span></span><span></span></div>
+  <h1 class="hero">写真から、<br>最善の一打へ。</h1>
+  <p class="sub">実戦写真を撮るだけ。牌を確認して、最善の一打とその理由まで。</p>
+
+  <div class="card">
+    <label>手牌写真</label>
+    <label class="upload" for="photo" id="drop">
+      <span id="uploadText">カメラで撮影 / 写真を選択<br><small style="color:#82909c">手牌を横一列に入れてください</small></span>
+      <img id="preview" class="hidden">
+    </label>
+    <input id="photo" type="file" accept="image/*" capture="environment">
+
+    <div class="row" style="margin-top:12px">
+      <div><label>席位置</label><select id="seat"><option value="bottom">手前</option><option value="top">対面</option><option value="left">左</option><option value="right">右</option></select></div>
+      <div><label>残り自摸回数</label><input id="draws" type="number" value="3" min="0" max="6"></div>
+    </div>
+    <label>ルール</label>
+    <select id="ruleset">
+      <option value="yonma_standard">四麻 標準</option>
+      <option value="sanma_standard">三麻 標準</option>
+      <option value="osaka_sanma_v1">大阪三麻 v1</option>
+    </select>
+    <div class="row" style="margin-top:10px">
+      <div><label>抜き北</label><input id="nuki" type="number" value="0" min="0" max="4"></div>
+      <div><label>祝儀枚数</label><input id="chips" type="number" value="0" min="0" max="20"></div>
+    </div>
+    <label>祝儀1枚の点数換算（任意）</label>
+    <input id="chipValue" type="number" value="0" min="0" step="100">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="autoNuki" type="checkbox" checked style="width:auto"> 北を自動で抜いて補充ツモを計算</label>
+    <button id="recognize" class="secondary">写真を読み取る</button>
+    <div id="visionStatus" class="status">写真認識後は、牌をタップして修正できます。</div><div class="notice">※ 認識結果は必ず確認してください。認識に自信がない場合、JONG AIは解析を確定表示しません。</div>
+  </div>
+
+  <div class="card">
+    <label>認識した手牌</label>
+    <div id="tileEditor" class="tile-editor" aria-label="手牌編集"></div>
+    <div class="edit-actions"><button id="editTiles" type="button" class="mini">牌を修正</button><span id="handCount" class="status"></span></div>
+    <div id="palette" class="palette hidden"></div>
+    <input id="hand" class="hand hidden" value="11m2356789p23778s" aria-hidden="true">
+    <div class="row">
+      <div><label>場風</label><select id="round"><option value="1z">東</option><option value="2z">南</option></select></div>
+      <div><label>自風</label><select id="self"><option value="1z">東</option><option value="2z" selected>南</option><option value="3z">西</option><option value="4z">北</option></select></div>
+    </div>
+    <label>ドラ表示牌（例 4p。複数はカンマ区切り）</label>
+    <input id="dora" class="hand" placeholder="4p">
+    <button id="analyze" class="primary" style="margin-top:14px">AI解析する</button>
+    <div id="status" class="status"></div>
+  </div>
+
+  <section id="result" class="hidden">
+    <div class="card">
+      <span class="badge">TWO-STAGE ANALYSIS</span>
+      <div id="best" class="best">—</div>
+      <div class="metrics">
+        <div class="metric"><small>推定EV</small><b id="ev">—</b></div>
+        <div class="metric"><small>推定和了率</small><b id="win">—</b></div>
+        <div class="metric"><small>推定聴牌率</small><b id="tenpai">—</b></div>
+        <div class="metric"><small>受け入れ</small><b id="ukeire">—</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <b>全候補</b>
+      <div style="overflow:auto;margin-top:8px">
+      <table class="table">
+        <thead><tr><th>打牌</th><th>EV</th><th>和了</th><th>聴牌</th><th>受入</th></tr></thead>
+        <tbody id="candidates"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="badge">JONG COACH</span>
+      <p id="coach" class="coach"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let selectedTile=-1;
+let originalDetectedHand=null;
+let visionTrainingId=null;
+let visionTiles=null;
+const tileLabel=t=>{const n=t[0],s=t[1]; if(s==='z') return ['','東','南','西','北','白','發','中'][Number(n)]||t; return (n==='0'?'5':n)+({m:'萬',p:'筒',s:'索'}[s]||s)};
+function parseMpsz(src){const out=[];let nums='';for(const ch of src){if(/[0-9]/.test(ch)){nums+=ch;continue}if(/[mpsz]/.test(ch)){for(const n of nums)out.push(n+ch);nums='';}}return out}
+function toMpsz(ts){let out='';for(const suit of ['m','p','s','z']){const a=ts.filter(t=>t[1]===suit).map(t=>t[0]).join('');if(a)out+=a+suit}return out}
+function renderHand(){const ts=visionTiles||parseMpsz($('hand').value);$('tileEditor').innerHTML=ts.map((t,i)=>`<button type="button" class="tile ${t[0]==='0'?'red':''} ${i===selectedTile?'selected':''}" data-i="${i}">${tileLabel(t)}<small>${t}</small></button>`).join('');$('handCount').textContent=`${ts.length}枚`;document.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{selectedTile=Number(b.dataset.i);renderHand();$('palette').classList.remove('hidden')})}
+function setTile(t){let ts=(visionTiles||parseMpsz($('hand').value)).slice();if(selectedTile<0||selectedTile>=ts.length)return;ts[selectedTile]=t;visionTiles=ts;$('hand').value=toMpsz(ts);selectedTile=-1;renderHand();$('palette').classList.add('hidden')}
+function buildPalette(){const all=[];for(const s of ['m','p','s']){for(let n=1;n<=9;n++)all.push(String(n)+s);all.push('0'+s)}for(let n=1;n<=7;n++)all.push(String(n)+'z');$('palette').innerHTML=all.map(t=>`<button type="button" data-t="${t}">${tileLabel(t)}</button>`).join('');$('palette').querySelectorAll('button').forEach(b=>b.onclick=()=>setTile(b.dataset.t))}
+$('editTiles').onclick=()=>{selectedTile=selectedTile<0?0:selectedTile;renderHand();$('palette').classList.toggle('hidden')};buildPalette();renderHand();
+$('photo').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  $('preview').src=URL.createObjectURL(f);
+  $('preview').classList.remove('hidden'); $('uploadText').classList.add('hidden');
+});
+
+$('recognize').onclick=async()=>{
+  const f=$('photo').files[0];
+  if(!f){$('visionStatus').textContent='先に写真を選択してください。';return;}
+  const fd=new FormData(); fd.append('image',f); fd.append('seat',$('seat').value); fd.append('draws',$('draws').value); fd.append('game_mode',$('ruleset').value==='yonma_standard'?'yonma':'sanma'); fd.append('ruleset',$('ruleset').value); fd.append('nuki_count',$('nuki').value||0); fd.append('chip_count',$('chips').value||0); fd.append('chip_value_points',$('chipValue').value||0); fd.append('auto_nuki',$('autoNuki').checked); fd.append('round_wind',$('round').value); fd.append('seat_wind',$('self').value); fd.append('dora_indicators_json',JSON.stringify($('dora').value.split(',').map(x=>x.trim()).filter(Boolean)));
+  $('visionStatus').textContent='認識中…';
+  try{
+    const r=await fetch('/v1/photo/analyze',{method:'POST',body:fd});
+    const j=await r.json();
+    if(j.recognition?.hand_mpsz){originalDetectedHand=j.recognition.hand_mpsz;visionTrainingId=j.recognition.vision_training_id||null;visionTiles=(j.recognition.tiles||[]).map(x=>x.tile);if(visionTiles.length!==14)visionTiles=parseMpsz(j.recognition.hand_mpsz);$('hand').value=j.recognition.hand_mpsz;renderHand();}
+    $('visionStatus').textContent=j.status==='needs_review'
+      ? '認識結果を確認・修正してください。'
+      : '認識しました。';
+  }catch(e){
+    $('visionStatus').textContent='認識モデルが未接続です。手牌欄を修正して解析できます。';
+  }
+};
+
+function pct(v){return v==null?'—':(v*100).toFixed(1)+'%'}
+$('analyze').onclick=async()=>{
+  $('status').textContent='解析しています…';
+  const dora=$('dora').value.split(',').map(x=>x.trim()).filter(Boolean);
+  const payload={
+    hand:$('hand').value.trim(), draws:Number($('draws').value), turn:Number($('draws').value), score_ev:true,
+    dealer:$('self').value==='1z', round_wind:$('round').value, seat_wind:$('self').value,
+    dora_indicators:dora, visible_tiles:[], red_dora_count:0,
+    game_mode:$('ruleset').value==='yonma_standard'?'yonma':'sanma',
+    ruleset:$('ruleset').value,
+    nuki_count:Number($('nuki').value||0),
+    chip_count:Number($('chips').value||0),
+    chip_value_points:Number($('chipValue').value||0),
+    auto_nuki:$('autoNuki').checked
+  };
+  try{
+    const r=await fetch('/v1/analyze/two-stage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(!r.ok)throw new Error(j.detail||'解析エラー');
+    const data=j.instant||{};
+    const cs=data.candidates||[]; const b=cs[0];
+    if(!b)throw new Error('候補がありません');
+    $('best').innerHTML=b.discard+' <small>切り</small>';
+    $('ev').textContent=(b.expected_points??0).toFixed(0)+'pt';
+    $('win').textContent=pct(b.win_probability);
+    $('tenpai').textContent=pct(b.tenpai_probability);
+    $('ukeire').textContent=(b.ukeire_total??0)+'枚';
+    $('candidates').innerHTML=cs.map(c=>`<tr><td>${c.discard}</td><td>${(c.expected_points??0).toFixed(0)}</td><td>${pct(c.win_probability)}</td><td>${pct(c.tenpai_probability)}</td><td>${c.ukeire_total??0}</td></tr>`).join('');
+    const second=cs[1];
+    $('coach').textContent=second
+      ? `${b.discard}切りが現モデルで最も高い期待値です。次点の${second.discard}切りとの差は約${Math.round((b.expected_points??0)-(second.expected_points??0))}pt。高速推定モデルによる暫定順位です。受け入れと残りツモ数を中心に比較し、精密EVで後から更新する設計です。`
+      : `${b.discard}切りを推奨します。`;
+    $('result').classList.remove('hidden');document.querySelectorAll('.step span').forEach(x=>x.classList.add('on'));localStorage.setItem('jong-last-hand',$('hand').value);
+    $('status').textContent='高速解析を表示しました。精密解析を計算中…';
+    if(originalDetectedHand && originalDetectedHand!==$('hand').value.trim()){
+      fetch('/v1/vision/correction',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({original_detected_hand:originalDetectedHand,corrected_hand:$('hand').value.trim(),ruleset:$('ruleset').value,source:'app-v0.2',vision_training_id:visionTrainingId,corrected_tiles:visionTiles})}).catch(()=>{});
+    }
+    if(j.precision_job_id) pollPrecision(j.precision_job_id);
+  }catch(e){$('status').textContent=e.message}
+};
+
+async function pollPrecision(jobId){
+  for(let i=0;i<45;i++){
+    await new Promise(r=>setTimeout(r,1200));
+    try{
+      const res=await fetch('/v1/analyze/precision/'+encodeURIComponent(jobId));
+      if(!res.ok) continue;
+      const job=await res.json();
+      if(job.status==='failed'){
+        $('status').textContent='高速推定を表示中。精密解析は失敗しました。';
+        return;
+      }
+      if(job.status!=='completed') continue;
+      const data=job.result||{};
+      const cs=data.candidates||[]; const b=cs[0];
+      if(!b){$('status').textContent='高速推定を表示中。精密結果が空でした。';return;}
+      $('best').innerHTML=b.discard+' <small>切り</small>';
+      $('ev').textContent=(b.expected_points??0).toFixed(0)+'pt';
+      $('win').textContent=pct(b.win_probability);
+      $('tenpai').textContent=pct(b.tenpai_probability);
+      $('ukeire').textContent=(b.ukeire_total??0)+'枚';
+      $('candidates').innerHTML=cs.map(c=>`<tr><td>${c.discard}</td><td>${(c.expected_points??0).toFixed(0)}</td><td>${pct(c.win_probability)}</td><td>${pct(c.tenpai_probability)}</td><td>${c.ukeire_total??0}</td></tr>`).join('');
+      const second=cs[1];
+      $('coach').textContent=second
+        ? `${b.discard}切りが精密側の暫定トップです。次点の${second.discard}切りとの差は約${Math.round((b.expected_points??0)-(second.expected_points??0))}ptです。`
+        : `${b.discard}切りを推奨します。`;
+      $('status').textContent='精密解析に更新しました';
+      return;
+    }catch(e){}
+  }
+  $('status').textContent='高速推定を表示中。精密解析は引き続きサーバー側で計算中です。';
+}
+
+
+$('ruleset').addEventListener('change',()=>{
+  const v=$('ruleset').value;
+  if(v==='osaka_sanma_v1') $('status').textContent='大阪三麻: 2〜8萬なし / チーなし / 北抜き / 喰いタンなし / 完全先付け';
+  else if(v==='sanma_standard') $('status').textContent='三麻モード: 2〜8萬を牌山・受け入れから除外します';
+  else $('status').textContent='四麻標準ルール';
+});
+
+
+const saved=localStorage.getItem('jong-last-hand');if(saved){$('hand').value=saved;renderHand();}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
