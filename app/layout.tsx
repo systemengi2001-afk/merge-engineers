@@ -9,6 +9,8 @@ import './interactions.css';
 import './services-static.css';
 import './illustration-override.css';
 
+const ogImage = 'https://systemengi2001-afk.github.io/merge-engineers/og.png?v=20260929-2';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
   title: 'MeRGe | 伝わる設計を、使われるWebへ。',
@@ -20,11 +22,22 @@ export const metadata: Metadata = {
     title: 'MeRGe | 伝わる設計を、使われるWebへ。',
     description: 'Webサイト・LP・Webシステムを、企画から実装まで。二人の制作チームMeRGe。',
     type: 'website',
+    url: 'https://systemengi2001-afk.github.io/merge-engineers/',
+    images: [
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: 'MeRGe — 伝わる設計を、使われるWebへ。',
+        type: 'image/png',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MeRGe | 伝わる設計を、使われるWebへ。',
     description: 'Webサイト・LP・Webシステムを、企画から実装まで。二人の制作チームMeRGe。',
+    images: [ogImage],
   },
 };
 
