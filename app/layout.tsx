@@ -19,13 +19,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'MeRGe | 伝わる設計を、使われるWebへ。',
     description: 'Webサイト・LP・Webシステムを、企画から実装まで。二人の制作チームMeRGe。',
-    images: [{ url: 'og.png', width: 1200, height: 630, alt: 'MeRGe — 伝わる設計を、使われるWebへ。' }],
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MeRGe | 伝わる設計を、使われるWebへ。',
     description: 'Webサイト・LP・Webシステムを、企画から実装まで。二人の制作チームMeRGe。',
-    images: ['og.png'],
   },
 };
 
