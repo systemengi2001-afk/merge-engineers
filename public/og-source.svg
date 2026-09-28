@@ -38,4 +38,5 @@
   <text x="86" y="385" fill="#c9d3df" font-family="'Noto Sans JP','Hiragino Sans','Yu Gothic',Arial,sans-serif" font-size="27" font-weight="400">Webサイト・LP・Webシステムを、企画から実装まで。</text>
   <line x1="86" y1="472" x2="158" y2="472" stroke="#ffffff" stroke-width="2" opacity=".85"/>
   <text x="184" y="481" fill="#dbe3ec" font-family="Arial, Helvetica, sans-serif" font-size="19" letter-spacing="7">WEB DESIGN / DEVELOPMENT</text>
+  <!-- deploy refresh 2026-09-29 -->
 </svg>
