@@ -27,6 +27,18 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Build OGP image
+        run: |
+          python -m pip install --disable-pip-version-check --quiet cairosvg
+          python - <<'PY'
+          import cairosvg
+          cairosvg.svg2png(
+              url='public/og-source.svg',
+              write_to='public/og.png',
+              output_width=1200,
+              output_height=630,
+          )
+          PY
       - run: pnpm build:pages
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -43,4 +55,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
