@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#02040a"/>
+      <stop offset="0.58" stop-color="#050b16"/>
+      <stop offset="1" stop-color="#100312"/>
+    </linearGradient>
+    <linearGradient id="cyanGlass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#42e8ff" stop-opacity=".08"/>
+      <stop offset=".5" stop-color="#00bfff" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#1976ff" stop-opacity=".08"/>
+    </linearGradient>
+    <linearGradient id="pinkGlass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff3db8" stop-opacity=".10"/>
+      <stop offset=".55" stop-color="#ff1493" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#8d2cff" stop-opacity=".10"/>
+    </linearGradient>
+    <filter id="glowC" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowP" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="950" cy="100" r="270" fill="#00bfff" opacity=".08"/>
+  <circle cx="1130" cy="500" r="260" fill="#ff1493" opacity=".08"/>
+  <polygon points="670,-40 915,250 780,560 1010,360" fill="url(#cyanGlass)" stroke="#24dfff" stroke-opacity=".65" stroke-width="2"/>
+  <polygon points="1040,-60 1200,70 1200,510 945,290" fill="url(#pinkGlass)" stroke="#ff46b8" stroke-opacity=".7" stroke-width="2"/>
+  <polygon points="865,125 1180,10 950,370" fill="none" stroke="#4fdcff" stroke-opacity=".65" stroke-width="2"/>
+  <polygon points="920,500 1200,230 1200,620" fill="none" stroke="#ff55bd" stroke-opacity=".65" stroke-width="2"/>
+  <line x1="650" y1="0" x2="1035" y2="630" stroke="#18dfff" stroke-width="2" opacity=".9" filter="url(#glowC)"/>
+  <line x1="915" y1="630" x2="1200" y2="150" stroke="#ff35ae" stroke-width="2" opacity=".9" filter="url(#glowP)"/>
+  <text x="82" y="225" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="108" font-weight="700" letter-spacing="-5">MeRGe</text>
+  <text x="84" y="320" fill="#ffffff" font-family="'Noto Sans JP','Hiragino Sans','Yu Gothic',Arial,sans-serif" font-size="48" font-weight="700">伝わる設計を、使われるWebへ。</text>
+  <text x="86" y="385" fill="#c9d3df" font-family="'Noto Sans JP','Hiragino Sans','Yu Gothic',Arial,sans-serif" font-size="27" font-weight="400">Webサイト・LP・Webシステムを、企画から実装まで。</text>
+  <line x1="86" y1="472" x2="158" y2="472" stroke="#ffffff" stroke-width="2" opacity=".85"/>
+  <text x="184" y="481" fill="#dbe3ec" font-family="Arial, Helvetica, sans-serif" font-size="19" letter-spacing="7">WEB DESIGN / DEVELOPMENT</text>
+</svg>
