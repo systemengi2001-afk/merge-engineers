@@ -9,7 +9,7 @@ import './interactions.css';
 import './services-static.css';
 import './illustration-override.css';
 
-const ogImage = 'https://systemengi2001-afk.github.io/merge-engineers/og.png?v=20260929-2';
+const ogImage = 'https://systemengi2001-afk.github.io/merge-engineers/og-final.jpg?v=20260929-3';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://systemengi2001-afk.github.io/merge-engineers/'),
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: 'MeRGe — 伝わる設計を、使われるWebへ。',
-        type: 'image/png',
+        type: 'image/jpeg',
       },
     ],
   },
