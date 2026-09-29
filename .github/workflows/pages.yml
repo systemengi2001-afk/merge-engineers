@@ -37,7 +37,7 @@ jobs:
           import cairosvg
           cairosvg.svg2png(
               url='public/og-source.svg',
-              write_to='public/og.png',
+              write_to='public/og-20260929-abstract-v2.png',
               output_width=1200,
               output_height=630,
           )
