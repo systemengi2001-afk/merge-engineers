@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#faf8f4">
   <meta name="description" content="aite.は自分・理想の相手・気になる人の恋愛傾向を20問で整理する診断サイト。8タイプ（男女別16パターン）と相性表で関係性を見つめます。">
   <meta property="og:title" content="aite.｜自分を知る、理想を描く、あの人を知る。">
-  <meta property="og:description" content="20問でわかる8つの恋愛タイプ。自分・理想・気になる人を診断して、相性表で比べよう。">
+  <meta property="og:description" content="デートや連絡、すれ違いなど20のリアルなシーンで恋愛タイプを診断。自分・理想・気になる人の相性も比較。">
   <title>aite.｜20問の恋愛タイプ診断と相性表</title>
   <style>
     :root{--bg:#faf8f4;--paper:#fffefa;--ink:#2e2d35;--muted:#77747c;--edge:#e9e3dc;--rose:#ed786e;--rose-dark:#d75f59;--blush:#fce6e0;--lav:#eae5f7;--yellow:#f9eed5;--purple:#8475ad;--serif:Georgia,'Yu Mincho','Hiragino Mincho ProN',serif;--sans:'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,system-ui,-apple-system,sans-serif}
@@ -28,13 +28,39 @@
     .result-emblem{overflow:hidden;border-radius:24px;background:#f6e8e5}
     .result-emblem img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 26%}
     @media(max-width:580px){.type-preview .type-illustration{height:140px}}
+
+    /* Scenario questions / full-framed character portraits: 2026-11 refresh */
+    .question-card{padding:38px 44px}
+    .question-title{min-height:0;margin:15px 0 25px;line-height:1.7}
+    .answer-list{gap:11px}
+    .answer-btn{min-height:66px;padding:16px 18px;align-items:center;line-height:1.65;white-space:normal}
+    .answer-btn.selected{padding:15px 17px}
+    .answer-btn span:first-child{min-width:0}
+    .answer-mark{width:20px;height:20px}
+    .result-hero{display:grid;grid-template-columns:minmax(0,245px) minmax(0,1fr);align-items:center;gap:29px}
+    .result-emblem{height:auto;width:100%;aspect-ratio:245/298;min-width:0;max-width:245px;flex-shrink:1;border-radius:20px;background:#f7e6e1;overflow:hidden;display:block;box-shadow:0 10px 24px #79556612}
+    .result-emblem img{width:100%;height:100%;display:block;object-fit:contain;object-position:center center}
+    .result-hero>div:last-child{min-width:0;overflow-wrap:anywhere}
+    .type-preview .type-illustration{display:block;width:100%;height:auto;aspect-ratio:245/298;object-fit:contain;object-position:center;background:#faf0ed;border-radius:15px;margin:0 0 12px}
+    .type-preview{min-height:0}
+    @media(max-width:580px){
+      .question-card{padding:28px 19px}
+      .question-title{font-size:21px;line-height:1.66}
+      .answer-btn{padding:14px 13px;font-size:12px;min-height:66px}
+      .answer-btn.selected{padding:13px 12px}
+      .result-hero{display:flex;flex-direction:column;gap:17px;align-items:center;text-align:center}
+      .result-emblem{height:auto;max-width:min(100%,262px);width:100%;aspect-ratio:245/298;margin:0 auto}
+      .result-hero>div:last-child{text-align:center;width:100%}
+      .result-card{padding:23px 19px}
+      .type-preview .type-illustration{height:auto;aspect-ratio:245/298}
+    }
 </style>
 </head>
 <body>
 <header><div class="wrap head-inner"><a href="#" class="logo" id="logo" aria-label="aite. トップページ">aite<b></b></a><nav class="nav"><button class="about-nav" id="navTypes">8タイプ</button><button id="navCompat">相性表</button><button class="nav-cta" id="navStart">診断する ↗</button></nav></div></header>
 <main>
 <section id="homeView" class="view">
-  <div class="wrap hero"><div><div class="eyebrow">A NEW WAY TO UNDERSTAND LOVE</div><h1>自分を知る。<br><span class="stroke">理想を描く。</span><br>あの人を知る。</h1><p class="hero-lead">自分の恋愛タイプも、まだ出会っていない理想の人も、いま気になっているあの人も。<br>「相手」をもっと理解するための、20問の恋愛診断。</p><div class="hero-facts"><span>20 QUESTIONS</span><span>8 AITE TYPES</span><span>16 PERSONAS</span><span>相性表つき</span></div></div><div class="orb-art" aria-hidden="true"><div class="bubble"></div><div class="bubble two"></div><div class="orb-center"><div class="orb-word">aite.</div></div><div class="float a">♡ だれかを知る</div><div class="float b">✳ 理想を描く</div><div class="float c">✦ 自分を知る</div></div></div>
+  <div class="wrap hero"><div><div class="eyebrow">A NEW WAY TO UNDERSTAND LOVE</div><h1>自分を知る。<br><span class="stroke">理想を描く。</span><br>あの人を知る。</h1><p class="hero-lead">自分の恋愛タイプも、まだ出会っていない理想の人も、いま気になっているあの人も。<br>20のリアルな恋愛シーンを選びながら、「相手」の恋愛観をひもとこう。</p><div class="hero-facts"><span>20 QUESTIONS</span><span>8 AITE TYPES</span><span>16 PERSONAS</span><span>相性表つき</span></div></div><div class="orb-art" aria-hidden="true"><div class="bubble"></div><div class="bubble two"></div><div class="orb-center"><div class="orb-word">aite.</div></div><div class="float a">♡ だれかを知る</div><div class="float b">✳ 理想を描く</div><div class="float c">✦ 自分を知る</div></div></div>
   <div class="wrap modes-section" id="modeAnchor"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR PATH</div><h2 class="sec-title">今日は、だれを診断する？</h2></div><span class="tiny">各20問・約3〜5分</span></div><div class="mode-grid"><button class="mode-card self" data-start="self"><div class="mode-index">01 / MYSELF</div><div class="mode-icon">◉</div><h3>自分のタイプを知る</h3><p>自分は恋愛でどんな人？<br>まずはあなた自身の傾向から。</p><div class="mode-foot"><span>相性診断のベースにも</span><span class="arrow-round">↗</span></div></button><button class="mode-card ideal" data-start="ideal"><div class="mode-index">02 / MY IDEAL</div><div class="mode-icon">♡</div><h3>理想の相手をつくる</h3><p>こんな人と恋がしたい。<br>20問で理想の相手を形にする。</p><div class="mode-foot"><span>まだ出会っていない相手を描く</span><span class="arrow-round">↗</span></div></button><button class="mode-card other" data-start="other"><div class="mode-index">03 / SOMEONE</div><div class="mode-icon">✳</div><h3>気になる人を知る</h3><p>あの人って、どんなタイプ？<br>見えている行動から傾向を整理。</p><div class="mode-foot"><span>「わからない」も選べる</span><span class="arrow-round">↗</span></div></button></div><div class="saved" id="savedSummary"><div><strong>診断結果を保存して、あとで相性チェック。</strong><p>この端末のブラウザ内だけに保存します。まだ結果はありません。</p></div><button class="btn-inline" id="savedAction">相性表を見る →</button></div></div>
   <div class="about"><div class="wrap about-grid"><div><div class="eyebrow">HOW IT WORKS</div><h2 class="sec-title">答えの先に、<br>8つの恋愛タイプ。</h2><p class="muted" style="font-size:13px;line-height:2.1">「B/U＝距離感」「A/W＝愛情表現」「H/V＝恋愛の進め方」。MBTIと重ならない6文字で8タイプを判定。男女別のコード表示で16パターンの結果が生まれます。診断した自分と相手を比べて、ふたりの接し方のヒントも見つけよう。</p></div><div class="about-features"><div class="feature"><span class="ico">B / U</span><strong>距離感</strong><p>Bond＝密着、Unbound＝自立。ふたりの時間と、ひとりの時間。どちらを大切にする？</p></div><div class="feature"><span class="ico">A / W</span><strong>愛情表現</strong><p>Action＝行動、Words＝言葉。言葉で伝える？　行動で示す？</p></div><div class="feature"><span class="ico">H / V</span><strong>恋愛のペース</strong><p>Harmony＝安定、Variety＝刺激。安定を育む？　新しさを楽しむ？</p></div><div class="feature"><span class="ico">∞</span><strong>相性チェック</strong><p>8×8の表で、心地よさとすれ違いを可視化。</p></div></div></div></div>
   <div class="type-section" id="typesAnchor"><div class="wrap"><div class="eyebrow">LOVE PERSONALITIES</div><h2 class="sec-title">8つのタイプをのぞいてみよう。</h2><p class="tiny">タイプコードは B/U × A/W × H/V の組み合わせ。男女別の表記で16パターン。性別で判定基準は変わりません。</p><div class="type-grid" id="typeGrid"></div></div></div>
@@ -48,7 +74,7 @@
 <footer><div class="wrap footer-inner"><a href="#" id="footerLogo" class="logo" style="font-size:28px">aite<b style="width:7px;height:7px"></b></a><div class="footer-note">© aite. / 恋愛傾向を整理するエンターテインメント診断です。精神・心理・医学的な診断ではありません。実在する相手の内面・恋愛感情は、本人との対話なしに判定できません。現在、広告リンクは設置していません。</div></div></footer>
 <script>
 (()=>{'use strict';
- const TOTAL=20,STORE='aite_v3_profiles',LEGACY_STORE='aite_v2_profiles';
+ const TOTAL=20,STORE='aite_v4_profiles',LEGACY_STORE='aite_v4_profiles';
  const CODE_MAP={'000':'BAH','001':'BAV','010':'BWH','011':'BWV','100':'UAH','101':'UAV','110':'UWH','111':'UWV'};
  const codeForBits=bits=>[(bits[0]?'U':'B'),(bits[1]?'W':'A'),(bits[2]?'V':'H')].join('');
  const codeWithPersona=(key,gender)=>key+(gender==='male'?'-M':gender==='female'?'-G':'');
@@ -64,28 +90,9 @@
  ];
  const AXES=[{id:'distance',label:'B / U｜心地よい距離感',low:'B・密着型',high:'U・自立型'},{id:'expression',label:'A / W｜愛情の伝え方',low:'A・行動型',high:'W・言語型'},{id:'pace',label:'H / V｜恋愛の進め方',low:'H・安定型',high:'V・刺激型'}];
  // polarity: 1 means agreement leans high, -1 means agreement leans low. Reverse-worded items avoid one-sided scoring.
- const Q=[
-  ['distance',-1,'恋人とは、休日をなるべく一緒に過ごしたい。','理想の相手は、休日をなるべく一緒に過ごしたがる。','あの人は、恋人と休日をなるべく一緒に過ごしたがる。'],
-  ['expression',1,'好意や感謝は、なるべく言葉で伝える。','理想の相手は、好意や感謝を言葉にして伝えてくれる。','あの人は、好意や感謝を言葉で伝えることが多い。'],
-  ['pace',-1,'デートは事前に予定を決めておきたい。','理想の相手は、デートの予定を前もって決めるほうだ。','あの人は、遊びの予定を前もって決めることが多い。'],
-  ['distance',1,'好きな人がいても、ひとりで過ごす時間は必要だ。','理想の相手は、恋人がいてもひとりの時間を大切にする。','あの人は、親しい人がいてもひとりの時間を大切にしている。'],
-  ['expression',-1,'「好き」と言うより、行動で気持ちを伝えたい。','理想の相手は、言葉より行動で好意を示してくれる。','あの人は、好意や感謝を言葉より行動で示すことが多い。'],
-  ['pace',1,'行ったことのない場所に、思いつきで出かけるのが好きだ。','理想の相手は、思いつきで新しい場所に出かけるのが好きだ。','あの人は、思いつきで新しい場所に出かけるのが好きそうだ。'],
-  ['distance',-1,'短いメッセージでも、毎日やりとりできるとうれしい。','理想の相手は、短いメッセージでも毎日やりとりしたがる。','あの人は、親しい人とこまめに連絡を取るほうだ。'],
-  ['expression',1,'気になることがあれば、できるだけ会話で確かめたい。','理想の相手は、気になることを会話で確かめようとする。','あの人は、気になることを会話で確かめることが多い。'],
-  ['pace',-1,'同じお店やいつもの過ごし方に、ほっとする。','理想の相手は、お気に入りの定番を長く楽しめる人だ。','あの人は、定番のお店や過ごし方を好むことが多い。'],
-  ['distance',1,'忙しいときは、無理に会わなくてもいいと思う。','理想の相手は、忙しい時期は会う回数を柔軟に調整できる。','あの人は、忙しいときは無理に予定を入れないほうだ。'],
-  ['expression',-1,'相手が困っていたら、言葉より先に具体的に手伝う。','理想の相手は、困ったときに具体的な行動で支えてくれる。','あの人は、誰かが困っていると具体的に行動して助ける。'],
-  ['pace',1,'ふたりで新しい趣味を始めることにわくわくする。','理想の相手は、ふたりで新しい趣味に挑戦したがる。','あの人は、新しい趣味や経験に挑戦するのが好きだ。'],
-  ['distance',-1,'大事な予定は、恋人と一緒に決めるほうが好きだ。','理想の相手は、大切な予定をふたりで一緒に決めたがる。','あの人は、大切な予定を親しい人と相談して決める。'],
-  ['expression',1,'相手の素敵なところを見つけたら、直接伝えたい。','理想の相手は、良いところを見つけたら言葉にしてくれる。','あの人は、誰かの良いところを言葉にして褒める。'],
-  ['pace',-1,'関係は少しずつ、着実に深めていきたい。','理想の相手は、関係を焦らず着実に深めようとする。','あの人は、新しい人間関係を焦らずに深めるほうだ。'],
-  ['distance',1,'恋人とは別々の趣味や友人関係も保ちたい。','理想の相手は、自分だけの趣味や友人関係も大切にする。','あの人は、親しい人と別の趣味や友人関係も楽しんでいる。'],
-  ['expression',-1,'大切な人には、実用的な贈り物や手助けで気持ちを表す。','理想の相手は、気の利いた贈り物や手助けで愛情を示す。','あの人は、実用的な贈り物や手助けで気持ちを表しがちだ。'],
-  ['pace',1,'予定外の出来事も、面白がって楽しめるほうだ。','理想の相手は、予定外の出来事も楽しめる。','あの人は、予定外の出来事でも楽しめることが多い。'],
-  ['distance',-1,'うれしいことがあれば、真っ先に恋人と共有したい。','理想の相手は、うれしい出来事を真っ先に恋人と共有したがる。','あの人は、うれしい出来事をすぐ親しい人に共有する。'],
-  ['expression',1,'意見が違ったら、お互いの考えを言葉にして話し合いたい。','理想の相手は、意見が違っても言葉で話し合おうとする。','あの人は、意見が違うときも言葉で話し合おうとする。']
- ].map((x,i)=>({id:i+1,axis:x[0],polarity:x[1],self:x[2],ideal:x[3],other:x[4]}));
+ const Q=[{"id":1,"polarity":1,"axis":"distance","scene":"金曜の夜。ふたりとも明日の予定が急に空いたとわかった。","choices":["『せっかくだし朝から夜まで一緒にいよう』と誘う","『少しでも会える時間ある？』と相談する","各自の予定を楽しみ、夜に軽く近況を聞く","それぞれ好きに過ごし、次のデートを楽しみにする"]},{"id":2,"polarity":1,"axis":"expression","scene":"恋人が大切な試験や仕事を終えて、疲れた顔で帰ってきた。","choices":["好きなごはんを用意して、ひと息つけるようにする","飲み物やおやつを差し入れて、そっと労う","『本当にお疲れさま』と、頑張りを言葉にする","『何が一番大変だった？』と話をじっくり聞く"]},{"id":3,"polarity":1,"axis":"pace","scene":"久しぶりのデート。行き先を決めるとき、ふたりの意見が分かれた。","choices":["何度も行った、落ち着けるお気に入りのお店を選ぶ","前に気に入った場所を軸に、少しだけ寄り道する","最近見つけた、初めてのお店を提案する","行き先を決めず、街を歩いて気になる場所に入る"]},{"id":4,"polarity":1,"axis":"distance","scene":"楽しかったデートの帰り道。明日もお互い休みだと気づいた。","choices":["『もう少し一緒にいたい』と、夜の予定も考える","帰る前に、次に会える日をその場で決めたくなる","今日はここまで。次回の約束は後日ゆっくり決める","『それぞれ休む時間もいいね』と気持ちよく解散する"]},{"id":5,"polarity":1,"axis":"expression","scene":"恋人に引っ越しの手伝いをしてもらった。ありがとうを伝えるなら？","choices":["好きな料理を作るなど、手間をかけてお返しする","好きそうな飲み物やお菓子をさりげなく渡す","『助かった！ありがとう』と、しっかり言葉にする","どれだけ心強かったか、エピソードを添えて伝える"]},{"id":6,"polarity":1,"axis":"pace","scene":"連休にふたりで出かけることになった。旅のプランはどうする？","choices":["行き慣れた場所で、のんびり過ごす計画にする","定番スポット中心に、少しだけ新しいことを混ぜる","初めての街を選び、見たい場所をいくつか調べる","まだ行ったことのない場所へ、その場のノリで向かう"]},{"id":7,"polarity":1,"axis":"distance","scene":"恋人と会えない平日。スマホでやりとりするとしたら？","choices":["朝から夜まで、ちょっとした出来事もこまめに送る","おはようとおやすみなど、毎日のやりとりは欲しい","話題があるときや、空いた時間にメッセージする","連絡は必要なときで十分。会うときの会話を楽しむ"]},{"id":8,"polarity":1,"axis":"expression","scene":"ふたりの間で小さなすれ違いが起きた。話し合って仲直りしたあと、どう接する？","choices":["相手が楽になるよう、いつも以上に行動で支える","普段どおり一緒に過ごし、小さな気遣いを重ねる","『仲直りできてよかった』と素直に声をかける","どう感じたか言葉にして、改めて気持ちを確かめ合う"]},{"id":9,"polarity":1,"axis":"pace","scene":"いつものデートコースを歩いていたら、知らない期間限定イベントを見つけた。","choices":["予定していた場所をそのまま楽しみたい","時間が余れば少しだけのぞいてみたい","面白そうなら、予定を調整して立ち寄りたい","『今しかない！』と、思い切って予定を変えたい"]},{"id":10,"polarity":1,"axis":"distance","scene":"日曜日の午後。恋人から『今から少し会える？』と連絡が来た。","choices":["予定に余裕があれば、できるだけ会いに行く","短い時間でも会えるか、予定を調整してみる","今日は自分のことをして、別の日を提案する","急に会うより、事前に約束した日にゆっくり会いたい"]},{"id":11,"polarity":1,"axis":"expression","scene":"恋人が体調を崩して、家で休んでいる。心配な気持ちを伝えるには？","choices":["必要なものを買いに行くなど、具体的に手を貸す","食べられそうなものを届けるなど、負担にならない形で支える","『無理しないでね』と、短く温かい言葉を送る","体調を気遣いながら、安心できる声かけを丁寧にする"]},{"id":12,"polarity":1,"axis":"pace","scene":"ふたりで新しい趣味を始める話になった。最初に何を選ぶ？","choices":["どちらかが慣れている趣味を、一緒に楽しむ","今ある趣味に少し違うやり方を取り入れてみる","ふたりとも初心者の活動を、体験教室で試す","未知のジャンルに飛び込んで、一緒にゼロから挑戦する"]},{"id":13,"polarity":1,"axis":"distance","scene":"恋人の誕生日が近い。準備を進めるとき、どんな関わり方が心地よい？","choices":["小さな準備もふたりで相談し、期待を共有したい","当日の希望を聞いて、一緒にプランを決めたい","大事な希望だけ聞いて、細部はそれぞれに任せたい","自由に考えられる余白を残し、当日に驚かせたい"]},{"id":14,"polarity":1,"axis":"expression","scene":"デート中、恋人の新しい髪型がとても似合っていると気づいた。","choices":["似合いそうなアクセサリーを後で探してみる","笑顔になったり写真を撮ったり、態度で伝える","『その髪型、すごく似合うね』とその場で褒める","どんなところが素敵か、具体的に言葉にする"]},{"id":15,"polarity":1,"axis":"pace","scene":"雨で屋外デートの予定がなくなった。代わりにどう過ごす？","choices":["いつものカフェで、ゆっくり話す時間にする","お気に入りの映画やお店など、安心できる案を選ぶ","前から気になっていた屋内スポットを探してみる","雨の日にしかできない、新しい体験を即興で考える"]},{"id":16,"polarity":1,"axis":"distance","scene":"恋人が友達との旅行を計画している。自分の週末はどうしたい？","choices":["出発前か帰宅後に、一緒の時間を作りたい","旅の話を聞く時間を、近いうちに取れたらうれしい","自分も友人や趣味の予定を入れて楽しむ","ひとりの時間をたっぷり使い、それぞれの経験を尊重する"]},{"id":17,"polarity":1,"axis":"expression","scene":"恋人が『最近、自信がなくなってきた』とぽつりと言った。","choices":["負担になっていることを見つけて、実際に手伝う","気分転換になる時間を作り、一緒に過ごす","『あなたのここが好き』と具体的な良さを伝える","相手の話を丁寧に聞き、感じていることを言葉にする"]},{"id":18,"polarity":1,"axis":"pace","scene":"付き合って半年。毎月のデートに、少しマンネリを感じ始めた。","choices":["いつもの安心できる時間が、やっぱり心地いい","行き慣れた場所に、ささやかな変化を足す","行ったことのない街やお店を探してみる","ふたりで未経験のことに、思い切って挑戦する"]},{"id":19,"polarity":1,"axis":"distance","scene":"仕事や学校でうれしい知らせがあった。まず誰にどう伝える？","choices":["いちばんに恋人に電話して、一緒に喜びたい","なるべく早く恋人にメッセージを送りたい","自分の中で味わったあと、落ち着いて伝えたい","それぞれの時間に報告し、会ったときに詳しく話したい"]},{"id":20,"polarity":1,"axis":"expression","scene":"デートの帰り道。『今日すごく楽しかった』という気持ちを残すなら？","choices":["写真を整理して、ふたりの思い出として共有する","次に喜びそうな場所を、こっそり調べておく","『今日楽しかった、ありがとう』とすぐに伝える","どの瞬間がうれしかったか、言葉にして伝える"]}];
+ const questionPrompts={self:"あなたなら、どうする？",ideal:"理想の相手なら、どうしてほしい？",other:"気になるあの人なら、どうしそう？"};
+ const answerScores=[-2,-1,1,2];
  const modeMeta={self:{label:'自分のタイプを知る',kicker:'MODE 01 / MYSELF',symbol:'◉',description:'あなた自身の恋愛のスタイルを、20問から整理します。「こうありたい」ではなく、ふだんの自分に近い答えを選んでください。',name:'あなたの呼び名',placeholder:'例：わたし',foot:'自分の結果を保存すると、理想の相手や気になる人との相性を比べられます。'},ideal:{label:'理想の相手をつくる',kicker:'MODE 02 / MY IDEAL',symbol:'♡',description:'あなたにとっての理想の相手を、20問で形にします。現実にいる誰かではなく、「こんな人と恋がしたい」というイメージで答えましょう。',name:'理想の相手の呼び名',placeholder:'例：理想の人',foot:'理想像の診断です。実在する人について断定する結果ではありません。'},other:{label:'気になる人を知る',kicker:'MODE 03 / SOMEONE',symbol:'✳',description:'気になる相手が日ごろ見せる行動について、知っている範囲で答えてください。見たことがない場面は「まだわからない」を選べます。',name:'気になる人の呼び名',placeholder:'例：あの人',foot:'あなたの観察に基づく仮の人物像です。相手の本心や恋愛感情を言い当てるものではありません。'}};
  const $=id=>document.getElementById(id), els=id=>Array.from(document.querySelectorAll(id));
  let profiles=loadProfiles(),session={mode:null,gender:null,name:'',index:0,answers:Array(TOTAL).fill(null)},activeResult=null,pair={a:'BAH',b:'BAV'};
@@ -98,8 +105,22 @@
  function start(mode){session={mode,gender:null,name:'',index:0,answers:Array(TOTAL).fill(null)};const m=modeMeta[mode];$('setupSymbol').textContent=m.symbol;$('setupKicker').textContent=m.kicker;$('setupTitle').textContent=m.label;$('setupDesc').textContent=m.description;$('nameLabel').textContent=m.name+'（任意）';$('personName').placeholder=m.placeholder;$('personName').value='';$('setupFoot').textContent=m.foot;els('[data-gender]').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false')});$('setupGo').disabled=true;show('setupView')}
  function setGender(g){session.gender=g;els('[data-gender]').forEach(b=>{const yes=b.dataset.gender===g;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes))});$('setupGo').disabled=false}
  function begin(){if(!session.gender)return;session.name=$('personName').value.trim().slice(0,24);session.index=0;renderQ();show('quizView')}
- const labels=[['とても当てはまる',2],['やや当てはまる',1],['どちらともいえない',0],['あまり当てはまらない',-1],['まったく当てはまらない',-2]];
- function renderQ(){let i=session.index,q=Q[i];$('quizKicker').textContent=modeMeta[session.mode].kicker;$('quizCount').textContent=String(i+1).padStart(2,'0')+' / 20';$('quizFill').style.width=((i+1)/TOTAL*100)+'%';$('quizTrack').setAttribute('aria-valuenow',String(i+1));$('qNum').textContent='QUESTION '+String(i+1).padStart(2,'0');$('qTitle').textContent=q[session.mode];$('answerList').replaceChildren();const a=session.answers[i];labels.forEach(([s,n])=>addChoice(s,n,a===n));if(session.mode==='other')addChoice('まだわからない／見たことがない','unknown',a==='unknown');$('qBack').textContent=i===0?'← 設定に戻る':'← 前の質問';$('qNext').textContent=i===TOTAL-1?'診断結果を見る →':'次の質問へ →';$('qNext').disabled=a===null;$('quizFeedback').classList.add('hidden')}
+ function renderQ(){
+ const i=session.index,q=Q[i],picked=session.answers[i];
+ $('quizKicker').textContent=modeMeta[session.mode].kicker;
+ $('quizCount').textContent=String(i+1).padStart(2,'0')+' / 20';
+ $('quizFill').style.width=((i+1)/TOTAL*100)+'%';
+ $('quizTrack').setAttribute('aria-valuenow',String(i+1));
+ $('qNum').textContent='SCENE '+String(i+1).padStart(2,'0');
+ $('qTitle').textContent=q.scene+' '+questionPrompts[session.mode];
+ $('answerList').replaceChildren();
+ q.choices.forEach((s,j)=>addChoice(s,answerScores[j],picked===answerScores[j]));
+ if(session.mode==='other')addChoice('まだわからない／この場面を見たことがない','unknown',picked==='unknown');
+ $('qBack').textContent=i===0?'← 設定に戻る':'← 前の質問';
+ $('qNext').textContent=i===TOTAL-1?'診断結果を見る →':'次の質問へ →';
+ $('qNext').disabled=picked===null;
+ $('quizFeedback').classList.add('hidden')
+ }
  function addChoice(text,value,selected){let b=document.createElement('button');b.type='button';b.className='answer-btn'+(selected?' selected':'')+(value==='unknown'?' unknown':'');b.setAttribute('aria-pressed',String(selected));let t=document.createElement('span'),c=document.createElement('span');t.textContent=text;c.className='answer-mark';c.textContent=selected?'✓':'';b.append(t,c);b.addEventListener('click',()=>{session.answers[session.index]=value;renderQ()});$('answerList').appendChild(b)}
  function calc(){let dims={},count=0;for(const axis of AXES){let matched=Q.map((q,i)=>q.axis===axis.id?{q,a:session.answers[i]}:null).filter(Boolean);let known=matched.filter(x=>typeof x.a==='number');const total=known.reduce((s,x)=>s+x.a*x.q.polarity,0);let normalized=known.length?total/(known.length*2):0;dims[axis.id]={known:known.length,score:Math.round((normalized+1)*50),bit:normalized>=0?1:0,near:Math.abs(normalized)<.17};count+=known.length}let key=codeForBits(AXES.map(a=>dims[a.id].bit));return{key,gender:session.gender,mode:session.mode,name:session.name,known:count,axes:dims,provisional:session.mode==='other'&&(count<15||AXES.some(a=>dims[a.id].known<4)),savedAt:Date.now()}}
  function finish(){if(session.mode==='other'){const known=session.answers.filter(a=>typeof a==='number').length;const byAxis=AXES.map(axis=>Q.filter((q,i)=>q.axis===axis.id&&typeof session.answers[i]==='number').length);if(known<8||byAxis.some(n=>n<2)){$('quizFeedback').textContent='観察できる回答が少ないため、まだ判定できません。8問以上、かつ各傾向2問以上は「まだわからない」以外で回答してください。';$('quizFeedback').classList.remove('hidden');return}}const result=calc();profiles[session.mode]=result;persist();activeResult=result;renderResult(result);drawSaved();show('resultView')}
